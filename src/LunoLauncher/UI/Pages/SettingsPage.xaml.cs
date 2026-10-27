@@ -104,6 +104,7 @@ namespace LunoLauncher.UI.Pages
             MsClientId.Text = Settings.MicrosoftClientId;
             CfKey.Text = Settings.CurseForgeApiKey;
             ThemeHex.Text = Settings.ThemeColor;
+            DarkModeBox.IsChecked = Theme.Dark;
 
             AutoUpdate.IsChecked = Settings.AutoCheckUpdate;
             UpdateSources.Text = string.Join(Environment.NewLine, Settings.ExtraList("update.sources"));
@@ -277,6 +278,13 @@ namespace LunoLauncher.UI.Pages
             Settings.ThemeColor = hex;
             ThemeHex.Text = hex;
             Theme.Apply(hex);
+        }
+
+        void DarkMode_Click(object sender, RoutedEventArgs e)
+        {
+            Theme.Dark = DarkModeBox.IsChecked == true;
+            Theme.Apply(Settings.ThemeColor);
+            Dialogs.Toast(Theme.Dark ? "已切换到深色模式" : "已切换到浅色模式");
         }
 
         void ThemeHex_LostFocus(object sender, RoutedEventArgs e)

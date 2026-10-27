@@ -23,6 +23,11 @@
     <SolidColorBrush x:Key="OkSoft" Color="#E3F6EE"/>
     <SolidColorBrush x:Key="Warn" Color="#E08A00"/>
     <SolidColorBrush x:Key="WarnSoft" Color="#FFF4E0"/>
+    <SolidColorBrush x:Key="Surface" Color="#FAFBFD"/>
+    <SolidColorBrush x:Key="SwitchOff" Color="#C9D0DB"/>
+    <SolidColorBrush x:Key="ScrollThumb" Color="#33000000"/>
+    <SolidColorBrush x:Key="ScrollThumbHover" Color="#66000000"/>
+    <SolidColorBrush x:Key="TooltipBg" Color="#F01F2633"/>
 
     <FontFamily x:Key="Icons">Segoe MDL2 Assets</FontFamily>
     <FontFamily x:Key="UiFont">Microsoft YaHei UI, Segoe UI</FontFamily>
@@ -303,7 +308,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border x:Name="track" Width="38" Height="20" CornerRadius="10" Background="#C9D0DB" VerticalAlignment="Center">
+                        <Border x:Name="track" Width="38" Height="20" CornerRadius="10" Background="{DynamicResource SwitchOff}" VerticalAlignment="Center">
                             <Ellipse x:Name="knob" Width="14" Height="14" Fill="White" HorizontalAlignment="Left" Margin="3,0"/>
                         </Border>
                         <ContentPresenter Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"/>
@@ -539,10 +544,10 @@
                             <Thumb>
                                 <Thumb.Template>
                                     <ControlTemplate TargetType="Thumb">
-                                        <Border x:Name="t" Background="#33000000" CornerRadius="4" Margin="2,0"/>
+                                        <Border x:Name="t" Background="{DynamicResource ScrollThumb}" CornerRadius="4" Margin="2,0"/>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="t" Property="Background" Value="#66000000"/>
+                                                <Setter TargetName="t" Property="Background" Value="{DynamicResource ScrollThumbHover}"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -566,7 +571,7 @@
                                     <Thumb>
                                         <Thumb.Template>
                                             <ControlTemplate TargetType="Thumb">
-                                                <Border Background="#33000000" CornerRadius="4" Margin="0,2"/>
+                                                <Border Background="{DynamicResource ScrollThumb}" CornerRadius="4" Margin="0,2"/>
                                             </ControlTemplate>
                                         </Thumb.Template>
                                     </Thumb>
@@ -586,7 +591,7 @@
     </Style>
 
     <Style TargetType="ToolTip">
-        <Setter Property="Background" Value="#F01F2633"/>
+        <Setter Property="Background" Value="{DynamicResource TooltipBg}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="9,5"/>

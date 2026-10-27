@@ -75,7 +75,7 @@
                             </StackPanel>
                         </Grid>
                         <TextBox x:Name="GameLog" Margin="0,12,0,0" Height="190" IsReadOnly="True" FontFamily="Consolas, Microsoft YaHei UI" FontSize="11.5"
-                                 VerticalContentAlignment="Top" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#FAFBFD"/>
+                                 VerticalContentAlignment="Top" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="{DynamicResource Surface}"/>
                     </StackPanel>
                 </Border>
 

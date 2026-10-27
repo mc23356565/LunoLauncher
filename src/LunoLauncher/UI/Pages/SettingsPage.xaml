@@ -170,6 +170,7 @@
                 <Border x:Name="SecUi" Style="{StaticResource CardBox}">
                     <StackPanel>
                         <TextBlock Text="个性化" Style="{StaticResource H2}"/>
+                        <CheckBox x:Name="DarkModeBox" Style="{StaticResource Switch}" Content="深色模式（立即生效，会记住）" Margin="0,2,0,12" Click="DarkMode_Click"/>
                         <TextBlock Text="主题色" Style="{StaticResource Sub}" Margin="0,0,0,6"/>
                         <WrapPanel x:Name="ThemePresets"/>
                         <Grid Margin="0,6,0,10">
