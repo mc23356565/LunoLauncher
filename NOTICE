@@ -1,7 +1,7 @@
-DawnLauncher
-===============
+LunoLauncher
+============
 
-Copyright (C) 2026 DawnLauncher contributors
+Copyright (C) 2026 LunoLauncher contributors
 
 This program is free software: you can redistribute it and/or modify it under the terms
 of the GNU General Public License as published by the Free Software Foundation, either
@@ -15,25 +15,51 @@ See the GNU General Public License for more details: https://www.gnu.org/license
 Based on OpenLauncher
 ---------------------
 
-DawnLauncher is a modified version (fork) of the OpenLauncher project.
+LunoLauncher is a modified version (fork) of the OpenLauncher project.
 
   Original work : OpenLauncher — a decentralized Minecraft launcher, licensed GPL-3.0.
                   The build this fork is based on was obtained from the public
                   distribution page https://honghemc.cn/openlauncher/ (a community
                   download/collection page, not the copyright holder).
-  Modifications : rebranded as DawnLauncher; independent update channel and signing
-                  key; own website, release process and privacy policy. No changes were
-                  made to the authentication protocol or to the endpoint usage.
+  Modifications : rebranded as LunoLauncher; independent update channel and signing
+                  key; own website, release process and privacy policy; a reworked
+                  co-op ("联机") feature; EasyTier bundled into the exe (0.3.1). No
+                  changes were made to the authentication protocol or to the
+                  endpoint usage.
+  Dates          : fork + rebrand 2026-10-24; modern UI/theme 2026-10-27;
+                   co-op rooms 2026-10-27; bundled EasyTier 2026-10-27.
 
 The original copyright notices and the GPL-3.0 license text are retained in this
 repository. Nothing in this NOTICE grants permission to use the names, logos or other
-trademarks of the original project or of Mojang Studios / Microsoft.
+trademarks of the original project or of Mojang Studies / Microsoft.
+
+
+Bundled third-party components
+------------------------------
+
+The distributed LunoLauncher.exe embeds the following *unmodified* official binaries so
+that co-op works out of the box (one exe to send to a friend). They are unpacked into the
+data directory on first use and executed as separate processes; none of them is linked
+into the launcher's own code (mere aggregation). Full license texts are embedded in the
+application ("第三方组件与许可") and are also kept under src/LunoLauncher/Assets/licenses/.
+
+  EasyTier 2.6.4 — easytier-core.exe, easytier-cli.exe
+    License  : GNU Lesser General Public License v3.0 (LGPL-3.0)
+    Copyright: EasyTier contributors
+    Source   : https://github.com/EasyTier/EasyTier (tag v2.6.4)
+    Replaceable: 联机 → 房间设置 → EasyTier 目录 (point it at your own build)
+
+  wintun.dll — TUN driver used by EasyTier
+    License  : Prebuilt Binaries License (WireGuard LLC); redistribution alongside the
+               software that uses it only via the permitted API is allowed by clause 3(d)
+    Source   : https://www.wintun.net/
+    Unmodified: this license forbids modifying the DLL
 
 
 Trademarks and affiliation
 --------------------------
 
-Minecraft is a trademark of Mojang Synergies AB. DawnLauncher is an independent
+Minecraft is a trademark of Mojang Synergies AB. LunoLauncher is an independent
 project. It is not affiliated with, endorsed by, sponsored by, or otherwise connected
 to Mojang Studios, Microsoft Corporation, or the OpenLauncher project.
 

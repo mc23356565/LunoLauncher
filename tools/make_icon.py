@@ -9,7 +9,7 @@ import os
 from PIL import Image, ImageDraw, ImageFilter, ImageChops
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, '..', 'src', 'OpenLauncher', 'Assets')
+OUT = os.path.join(HERE, '..', 'src', 'LunoLauncher', 'Assets')
 os.makedirs(OUT, exist_ok=True)
 
 S = 1024                      # 设计尺寸，最后再缩小（超采样，边缘更干净）

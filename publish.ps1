@@ -14,7 +14,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$csproj = "$root\src\OpenLauncher\OpenLauncher.csproj"
+$csproj = "$root\src\LunoLauncher\LunoLauncher.csproj"
 
 # 1. 写入版本号
 $xml = Get-Content $csproj -Raw -Encoding UTF8
@@ -25,7 +25,7 @@ $xml = [regex]::Replace($xml, '<Version>[^<]*</Version>', "<Version>$Version</Ve
 & "$root\build.ps1"
 $dotnet = (Get-Command dotnet -ErrorAction SilentlyContinue).Source
 if (-not $dotnet) { $dotnet = "$env:USERPROFILE\.dotnet\dotnet.exe" }
-& $dotnet build "$root\tools\Release\OpenLauncher.Release.csproj" -c Release -nologo -v q | Out-Null
+& $dotnet build "$root\tools\Release\LunoLauncher.Release.csproj" -c Release -nologo -v q | Out-Null
 $tool = "$root\tools\Release\bin\Release\ol-release.exe"
 
 # 3. 签名清单

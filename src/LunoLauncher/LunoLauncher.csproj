@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>LunoLauncher</AssemblyName>
+    <RootNamespace>LunoLauncher</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+    <Version>0.3.1</Version>
+    <Product>LunoLauncher</Product>
+    <Description>轻量的 Minecraft 启动器（OpenLauncher 分支）</Description>
+    <Copyright>LunoLauncher contributors. Based on OpenLauncher, GPL-3.0.</Copyright>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>embedded</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <Deterministic>true</Deterministic>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591;CS0618</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Security" />
+    <Reference Include="Microsoft.VisualBasic" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\icon.png" />
+    <EmbeddedResource Include="Assets\zh-names.json" LogicalName="zh-names.json" />
+  </ItemGroup>
+
+  <!-- 联机：内置 EasyTier（官方 Release 的 Windows x64 包，原样打包，见 Assets\licenses） -->
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\tunnel\easytier-2.6.4-win64.zip" LogicalName="Luno.Payload.EasyTier.zip" />
+    <EmbeddedResource Include="Assets\licenses\LGPL-3.0.txt" LogicalName="Luno.License.LGPL-3.0.txt" />
+    <EmbeddedResource Include="Assets\licenses\wintun-license.txt" LogicalName="Luno.License.wintun.txt" />
+    <EmbeddedResource Include="Assets\licenses\THIRD-PARTY.txt" LogicalName="Luno.License.THIRD-PARTY.txt" />
+  </ItemGroup>
+
+</Project>

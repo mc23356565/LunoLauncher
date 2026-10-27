@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using OpenLauncher.Core;
-using OpenLauncher.Update;
+using LunoLauncher.Core;
+using LunoLauncher.Update;
 
-namespace OpenLauncher.Core
+namespace LunoLauncher.Core
 {
     // UpdateCrypto 依赖 Util.Sha256，这里给一个最小实现，避免把整个启动器的 Util 拉进来
     static class Util
@@ -19,7 +19,7 @@ namespace OpenLauncher.Core
     }
 }
 
-namespace OpenLauncher.Release
+namespace LunoLauncher.Release
 {
     static class Program
     {

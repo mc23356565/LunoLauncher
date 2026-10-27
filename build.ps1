@@ -15,16 +15,16 @@ $dotnet = (Get-Command dotnet -ErrorAction SilentlyContinue).Source
 if (-not $dotnet -and (Test-Path "$env:USERPROFILE\.dotnet\dotnet.exe")) { $dotnet = "$env:USERPROFILE\.dotnet\dotnet.exe" }
 if (-not $dotnet) { throw 'dotnet not found: install the .NET SDK first.' }
 
-& $dotnet build "$root\src\OpenLauncher\OpenLauncher.csproj" -c Release -nologo
+& $dotnet build "$root\src\LunoLauncher\LunoLauncher.csproj" -c Release -nologo
 if ($LASTEXITCODE -ne 0) { throw 'Build failed.' }
 
 $dist = Join-Path $root 'dist'
 New-Item -ItemType Directory -Force $dist | Out-Null
 
 try {
-    Copy-Item "$root\src\OpenLauncher\bin\Release\LunoLauncher.exe" $dist -Force
+    Copy-Item "$root\src\LunoLauncher\bin\Release\LunoLauncher.exe" $dist -Force
     # The long-path switch is set in code at startup; the .config file is optional.
-    Copy-Item "$root\src\OpenLauncher\bin\Release\LunoLauncher.exe.config" $dist -Force
+    Copy-Item "$root\src\LunoLauncher\bin\Release\LunoLauncher.exe.config" $dist -Force
 } catch {
     throw "Cannot write to dist - is LunoLauncher still running? Close it and retry. $($_.Exception.Message)"
 }

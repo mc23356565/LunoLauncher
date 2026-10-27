@@ -1,0 +1,33 @@
+LunoLauncher 内置的第三方组件
+============================================================
+
+把 LunoLauncher.exe 发给朋友就能联机，是因为联机用的组件已经打包在 exe 里了：
+第一次点「联机」时会自动解压到「数据目录\tunnel\bin」，不用另外下载或安装。
+
+
+1) EasyTier 2.6.4
+   文件：easytier-core.exe、easytier-cli.exe
+   用途：点对点虚拟局域网（联机）
+   许可：GNU Lesser General Public License v3.0（LGPL-3.0）
+   来源：https://github.com/EasyTier/EasyTier 官方 Windows x86_64 Release，
+         二进制未做任何修改
+   源码：https://github.com/EasyTier/EasyTier/tree/v2.6.4
+   版权：EasyTier contributors
+
+   EasyTier 是以「独立进程」方式调用的：启动器只生成命令行、读它的日志，
+   没有把它链接进启动器本体，属于聚合分发（mere aggregation）。
+   你也可以换成自己编译的版本：在「联机 → 房间设置 → EasyTier 目录」里
+   指定自己那份所在的目录，启动器会优先使用它。
+
+
+2) wintun.dll
+   用途：EasyTier 在 Windows 上创建虚拟网卡用的 TUN 驱动
+   许可：Prebuilt Binaries License（WireGuard LLC），全文见本窗口最后一部分
+   来源：随 EasyTier 官方发布包分发，未做任何修改（该许可禁止修改这个 DLL）
+
+
+本启动器自身的许可
+------------------------------------------------------------
+LunoLauncher 以 GPL-3.0 发布（OpenLauncher 的分支）。
+全文见仓库根目录的 LICENSE，或 https://www.gnu.org/licenses/gpl-3.0.txt
+项目主页：https://github.com/mc23356565/LunoLauncher

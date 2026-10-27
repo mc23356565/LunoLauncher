@@ -63,10 +63,10 @@ Enforcement points, if you want to verify this by reading the code:
 
 | Concern | File |
 |---|---|
-| Offline profiles cannot be created | `src/OpenLauncher/Accounts/OfflineAuth.cs` |
-| Offline / third-party accounts are rejected at launch | `src/OpenLauncher/Accounts/AccountService.cs` |
-| Both options are hidden from the account dialog | `src/OpenLauncher/UI/AccountDialogs.cs` |
-| The switches themselves (both `false`) | `src/OpenLauncher/Branding.cs` |
+| Offline profiles cannot be created | `src/LunoLauncher/Accounts/OfflineAuth.cs` |
+| Offline / third-party accounts are rejected at launch | `src/LunoLauncher/Accounts/AccountService.cs` |
+| Both options are hidden from the account dialog | `src/LunoLauncher/UI/AccountDialogs.cs` |
+| The switches themselves (both `false`) | `src/LunoLauncher/Branding.cs` |
 
 ## Privacy
 
@@ -113,7 +113,7 @@ Minecraft is a trademark of Mojang Synergies AB.
 |---|---|
 | 启动 | 一键启动；自动补全缺失文件；自动选择 / 下载合适的 Java；自动分配内存；版本隔离；自定义窗口标题、窗口大小、全屏；启动后自动进服；启动后最小化 / 隐藏 / 关闭；实时游戏日志；导出启动脚本 |
 | 账号 | 微软正版（设备代码登录，需要已获批的 Client ID）；皮肤头像 |
-| 联机 | 局域网世界 + 虚拟局域网直连：房间列表、从日志自动读端口、一键复制地址、启动即进服 |
+| 联机 | 局域网世界 + 虚拟局域网直连：创建 / 加入房间、房间成员与连接状态、从日志自动读端口、一键复制邀请、启动即进服；**EasyTier 已内置**，把 exe 发给对方就能用 |
 | 下载游戏 | 正式版 / 快照 / 远古版 / 愚人节版；Forge、NeoForge、Fabric（可同时装 Fabric API）、Quilt；自己执行 Forge 安装器的处理器，下载可走镜像 |
 | 社区资源 | Modrinth + CurseForge 双源搜索 Mod / 整合包 / 资源包 / 光影包 / 数据包；常见中文名搜索；自动补齐前置 Mod；按版本和加载器筛选 |
 | 整合包 | 导入 Modrinth（.mrpack）和 CurseForge（.zip）整合包；导出为 .mrpack |
@@ -128,13 +128,14 @@ Minecraft is a trademark of Mojang Synergies AB.
 从 https://mc23356565.github.io/LunoLauncher/ 下载 `LunoLauncher.exe`，放进一个空文件夹双击即可
 （Windows 10 / 11 自带 .NET Framework 4.8，无需安装任何东西）。
 游戏文件默认放在 exe 旁边的 `.minecraft`，启动器配置在 `LunoLauncher` 文件夹里——整个文件夹拷走就能在别的电脑上用。
+联机用的 EasyTier 已经打包在 exe 里（约 13 MB），第一次点「联机」时自动解压到 `LunoLauncher\tunnel\bin`，不需要另外下载。
 
 也可以在 **版本选择 → 添加已有的游戏目录** 里直接使用官方启动器、PCL、HMCL 的 `.minecraft`。
 
 ## 项目结构
 
 ```
-src/OpenLauncher/
+src/LunoLauncher/
   Core/       JSON、HTTP、镜像表、多线程下载器、设置、任务
   Game/       版本 JSON 合并、安装器（原版 / Fabric / Quilt / Forge / NeoForge）、启动参数、Java 管理、崩溃分析
   Accounts/   微软正版登录、皮肤（离线与外置登录在本发行版中已关闭）
@@ -163,5 +164,5 @@ not be approved. This requirement applies regardless of server configuration."*
 - 离线账号：不需要认证就能进入游戏，不满足上述要求
 - 外置登录：验证的是第三方皮肤站账号，不能证明玩家拥有 Java 版
 
-两项分别由 `src/OpenLauncher/Branding.cs` 的 `AllowOfflineAccount` 与 `AllowThirdPartyLogin`
+两项分别由 `src/LunoLauncher/Branding.cs` 的 `AllowOfflineAccount` 与 `AllowThirdPartyLogin`
 控制，默认均为 `false`；旧配置里残留的离线 / 外置登录账号会被拒绝启动，且没有开关可以打开。
