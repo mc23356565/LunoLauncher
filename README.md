@@ -43,6 +43,31 @@ No other Minecraft Services endpoints are used. Access to those endpoints requir
 **approved application (client) ID**; details and the current status are documented in
 [微软登录.md](微软登录.md).
 
+## Account policy
+
+Authentication is mandatory in this build, and this is enforced in code rather than by a
+setting:
+
+- **No offline, unauthenticated or "no-login" profiles.** The account selector only offers
+  Microsoft sign-in. There is no build flag, command-line switch, environment variable or
+  configuration key that enables an offline profile, and any offline account left over from
+  an older installation is rejected before the game can start.
+- **Ownership is verified before launch.** `GET /minecraft/profile` must succeed for the
+  account, otherwise the installation cannot be launched.
+- **Third-party sign-in (authlib-injector / Yggdrasil) is disabled as well.** It
+  authenticates a third-party account but does not prove ownership of Java Edition.
+- The launcher never bypasses, weakens or substitutes Mojang authentication, and contains
+  no cheat, automation or account-sharing functionality.
+
+Enforcement points, if you want to verify this by reading the code:
+
+| Concern | File |
+|---|---|
+| Offline profiles cannot be created | `src/OpenLauncher/Accounts/OfflineAuth.cs` |
+| Offline / third-party accounts are rejected at launch | `src/OpenLauncher/Accounts/AccountService.cs` |
+| Both options are hidden from the account dialog | `src/OpenLauncher/UI/AccountDialogs.cs` |
+| The switches themselves (both `false`) | `src/OpenLauncher/Branding.cs` |
+
 ## Privacy
 
 No telemetry, no analytics, no account backend. The only account data stored is the
@@ -106,33 +131,6 @@ Minecraft is a trademark of Mojang Synergies AB.
 
 也可以在 **版本选择 → 添加已有的游戏目录** 里直接使用官方启动器、PCL、HMCL 的 `.minecraft`。
 
-## 自己编译
-
-只需要 [.NET SDK](https://dotnet.microsoft.com/download)（8 或更新），不需要 Visual Studio：
-
-```powershell
-.\build.ps1        # 输出 dist\LunoLauncher.exe
-```
-
-## 去中心化是怎么做到的
-
-```
-           官方源                       公益镜像（可增删）
-  Mojang / Forge / NeoForge /     BMCLAPI / MCIM / 你自己加的
-  Fabric / Quilt / Modrinth /  ⇄  ─────────────────────────
-  CurseForge                      错峰竞速，谁快用谁，失败自动换
-                 ╲                   ╱
-                  ╲                 ╱
-                   LunoLauncher.exe
-                  ╱                 ╲
- 签名更新清单（GitHub / jsDelivr / Gitee / 任何人的镜像）
-   ↑ 只认被信任公钥签名的清单；exe 用 SHA-256 校验
-```
-
-- 改名、换仓库、换维护者都只需要改 `src/OpenLauncher/Branding.cs` 一个文件。
-- 发版流程、钥匙轮换、社区接手：见 [发布与接手.md](发布与接手.md)。
-- 微软登录需要自己申请 Client ID：见 [微软登录.md](微软登录.md)。
-
 ## 项目结构
 
 ```
@@ -155,16 +153,15 @@ docs/           维护文档
 
 ## 发行版策略（重要）
 
-本发行版**只支持微软正版登录**：账号类型里没有「离线」，也没有「外置登录（authlib-injector）」。
+本发行版**只支持微软正版登录**：账号类型只有「微软正版」，没有「离线」，也没有「外置登录（authlib-injector）」。
 
 原因（对应官方审核原文）：*"Applications must verify the user's game ownership and require
 authentication before enabling gameplay or access to servers or sites. Applications that
 bypass or disable authentication, ownership or license checks, or other safety features will
 not be approved. This requirement applies regardless of server configuration."*
 
-- 离线账号 → 不验证所有权、不需要认证即可进游戏，属于明文禁止项
-- 外置登录 → 验证的是第三方皮肤站账号，同样不验证是否拥有 Minecraft: Java Edition
+- 离线账号：不需要认证就能进入游戏，不满足上述要求
+- 外置登录：验证的是第三方皮肤站账号，不能证明玩家拥有 Java 版
 
 两项分别由 `src/OpenLauncher/Branding.cs` 的 `AllowOfflineAccount` 与 `AllowThirdPartyLogin`
-控制，默认均为 `false`。只在本地自用、不对外分发时才考虑改回 `true`。
-旧配置里残留的离线/外置登录账号会提示无效并被拒绝启动。
+控制，默认均为 `false`；旧配置里残留的离线 / 外置登录账号会被拒绝启动，且没有开关可以打开。
