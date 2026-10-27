@@ -4,102 +4,81 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="22,18,22,10" MaxWidth="900">
 
-            <!-- 隧道状态 -->
-            <Border Style="{StaticResource CardBox}">
+            <!-- 还没有房间时的引导 -->
+            <Border x:Name="EmptyCard" Style="{StaticResource CardBox}">
                 <StackPanel>
-                    <TextBlock Text="联机隧道" Style="{StaticResource H2}"/>
-                    <TextBlock x:Name="TunnelState" Style="{StaticResource Sub}" TextWrapping="Wrap" Margin="0,2,0,10"/>
-                    <TextBlock x:Name="ElevHint" Style="{StaticResource Sub}" TextWrapping="Wrap" Margin="0,0,0,10"/>
-                    <WrapPanel>
-                        <Button Content="启动隧道" Style="{StaticResource Primary}" Margin="0,0,8,8" Click="StartTunnel_Click"/>
-                        <Button x:Name="ElevateButton" Content="以管理员身份重启" Margin="0,0,8,8" Click="Elevate_Click"/>
-                        <Button Content="停止" Margin="0,0,8,8" Click="StopTunnel_Click"/>
-                        <Button Content="状态与日志" Margin="0,0,8,8" Click="Report_Click"/>
-                        <Button Content="诊断" Margin="0,0,8,8" Click="Diagnose_Click"/>
-                        <Button Content="我的地址" Margin="0,0,8,8" Click="MyAddress_Click"/>
-                        <Button Content="放行端口" Margin="0,0,8,8" Click="Firewall_Click"/>
-                        <Button Content="peer 表" Margin="0,0,8,8" Click="Peers_Click"/>
-                        <Button Content="打开日志目录" Margin="0,0,8,8" Click="OpenLogs_Click"/>
+                    <TextBlock Text="一起玩" Style="{StaticResource H2}"/>
+                    <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap" Margin="0,2,0,0"
+                               Text="创建房间后把邀请信息发给朋友，对方粘贴就能进来。隧道会在后台自动建立，你不用关心虚拟网卡和节点。"/>
+                    <WrapPanel Margin="0,14,0,0">
+                        <Button Content="创建房间" Style="{StaticResource Primary}" Margin="0,0,8,0" Click="Create_Click"/>
+                        <Button Content="加入房间" Margin="0,0,8,0" Click="Join_Click"/>
                     </WrapPanel>
                 </StackPanel>
             </Border>
 
-            <!-- 隧道配置 -->
-            <Border Style="{StaticResource CardBox}">
+            <!-- 当前房间 -->
+            <Border x:Name="RoomCard" Style="{StaticResource CardBox}" Visibility="Collapsed">
                 <StackPanel>
-                    <TextBlock Text="隧道配置" Style="{StaticResource H2}"/>
-                    <TextBlock Style="{StaticResource Sub}" TextWrapping="Wrap" Margin="0,2,0,0"
-                               Text="双方必须完全一致：网络名、网络密钥、公共节点列表。改完点「保存配置」，再重启隧道生效。"/>
-                    <TextBlock Style="{StaticResource Sub}" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="{DynamicResource Warn}"
-                               Text="⚠ EasyTier 自身不提供中转服务器，必须有「一个双方都能连到的节点」才能组网。没有公网 IP、也找不到可用公共节点时，改用 ZeroTier / Tailscale（自带中转），它们分配的虚拟 IP 可以直接填进下面的「房间」。"/>
-
-                    <Grid Margin="0,12,0,0">
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="14"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="网络名" Style="{StaticResource Body}"/>
-                            <TextBox x:Name="NameBox" Margin="0,4,0,0"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Text="网络密钥" Style="{StaticResource Body}"/>
-                            <TextBox x:Name="SecretBox" Margin="0,4,0,0"/>
-                        </StackPanel>
-                    </Grid>
-
-                    <TextBlock Text="公共共享节点 / 对端（一行一个，可改）" Style="{StaticResource Body}" Margin="0,14,0,0"/>
-                    <TextBox x:Name="PeersBox" AcceptsReturn="True" Height="64" Margin="0,4,0,0"
-                             TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
-                    <WrapPanel Margin="0,6,0,0">
-                        <Button Content="恢复官方节点" Margin="0,0,8,0" Click="Official_Click"/>
-                        <TextBlock x:Name="NodeHint" Style="{StaticResource Sub}" VerticalAlignment="Center"/>
-                    </WrapPanel>
-
-                    <Grid Margin="0,14,0,0">
-                        <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="14"/>
-                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="监听端口（可选）" Style="{StaticResource Body}"/>
-                            <TextBox x:Name="ListenBox" Width="150" HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                            <TextBlock x:Name="RoomTitle" Text="房间" Style="{StaticResource H2}"/>
+                            <TextBlock x:Name="RoomSub" Style="{StaticResource Sub}" TextWrapping="Wrap"/>
                         </StackPanel>
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Text="EasyTier 目录（留空自动查找）" Style="{StaticResource Body}"/>
-                            <TextBox x:Name="DirBox" Margin="0,4,0,0"/>
-                        </StackPanel>
+                        <Button Grid.Column="1" Content="关闭房间" Style="{StaticResource DangerButton}"
+                                VerticalAlignment="Top" Click="CloseRoom_Click"/>
                     </Grid>
+
+                    <Border Background="{DynamicResource CardHover}" CornerRadius="10" Padding="14,12" Margin="0,12,0,0">
+                        <StackPanel>
+                            <TextBlock x:Name="TunnelState" Style="{StaticResource Body}" TextWrapping="Wrap"/>
+                            <TextBlock x:Name="AddrLine" Style="{StaticResource Body}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                            <TextBlock x:Name="ElevHint" Style="{StaticResource Sub}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                            <WrapPanel Margin="0,10,0,0">
+                                <Button x:Name="TunnelStartButton" Content="启动隧道" Style="{StaticResource Primary}"
+                                        Margin="0,0,8,0" Click="StartTunnel_Click"/>
+                                <Button x:Name="TunnelStopButton" Content="停止隧道"
+                                        Margin="0,0,8,0" Click="StopTunnel_Click"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="房间成员" Style="{StaticResource Body}" Margin="0,16,0,4"/>
+                    <ListBox x:Name="PeerList" Style="{StaticResource CardList}" MaxHeight="180" MinHeight="52"/>
+                    <TextBlock x:Name="PeerHint" Style="{StaticResource Sub}" TextWrapping="Wrap" Margin="0,6,0,0"/>
 
                     <WrapPanel Margin="0,14,0,0">
-                        <CheckBox x:Name="DhcpCheck" Content="自动分配虚拟 IP" Margin="0,0,18,6" VerticalAlignment="Center"/>
-                        <CheckBox x:Name="LatencyCheck" Content="延迟优先" Margin="0,0,18,6" VerticalAlignment="Center"/>
-                        <CheckBox x:Name="BroadcastCheck" Content="转发 UDP 广播（局域网列表可见，需管理员）" Margin="0,0,18,6" VerticalAlignment="Center"/>
+                        <Button x:Name="LaunchButton" Content="启动游戏" Style="{StaticResource Primary}" Margin="0,0,8,8" Click="Launch_Click"/>
+                        <Button x:Name="DetectButton" Content="读取端口" Margin="0,0,8,8" Click="Detect_Click"/>
+                        <Button Content="复制邀请信息" Margin="0,0,8,8" Click="Invite_Click"/>
+                        <Button Content="复制地址" Margin="0,0,8,8" Click="Copy_Click"/>
+                        <Button Content="刷新成员" Margin="0,0,8,8" Click="RefreshPeers_Click"/>
                     </WrapPanel>
-
-                    <WrapPanel Margin="0,10,0,0">
-                        <Button Content="保存配置" Style="{StaticResource Primary}" Margin="0,0,8,0" Click="Save_Click"/>
-                        <Button Content="生成启动脚本" Click="Script_Click"/>
+                    <WrapPanel>
+                        <Button Content="房间设置" Margin="0,0,8,8" Click="Settings_Click"/>
+                        <Button x:Name="ElevateButton" Content="以管理员身份重启" Margin="0,0,8,8" Click="Elevate_Click"/>
+                        <Button Content="诊断" Margin="0,0,8,8" Click="Diagnose_Click"/>
+                        <Button Content="状态与日志" Margin="0,0,8,8" Click="Report_Click"/>
                     </WrapPanel>
                 </StackPanel>
             </Border>
 
-            <!-- 房间 -->
+            <!-- 房间列表 -->
             <Border Style="{StaticResource CardBox}">
                 <StackPanel>
-                    <TextBlock Text="房间" Style="{StaticResource H2}"/>
-                    <TextBlock x:Name="RoomHint" Style="{StaticResource Sub}" TextWrapping="Wrap" Margin="0,2,0,10"
-                               Text="房主开局域网后，把 房主虚拟IP:端口 存成房间，就能一键进服。"/>
-
-                    <ListBox x:Name="RoomList" Style="{StaticResource CardList}" MaxHeight="240" MinHeight="60"/>
-
+                    <TextBlock Text="我的房间" Style="{StaticResource H2}"/>
+                    <TextBlock Style="{StaticResource Sub}" TextWrapping="Wrap" Margin="0,2,0,10"
+                               Text="每行保存的是一个房间的完整配置。双击进入房间。"/>
+                    <ListBox x:Name="RoomList" Style="{StaticResource CardList}" MaxHeight="220" MinHeight="60"
+                             MouseDoubleClick="RoomList_DoubleClick"/>
                     <WrapPanel Margin="0,12,0,0">
-                        <Button Content="添加房间" Style="{StaticResource Primary}" Margin="0,0,8,8" Click="AddRoom_Click"/>
-                        <Button Content="读取端口" Margin="0,0,8,8" Click="DetectPort_Click"/>
-                        <Button Content="复制地址" Margin="0,0,8,8" Click="Copy_Click"/>
-                        <Button Content="启动并直连（加入方）" Margin="0,0,8,8" Click="Launch_Click"/>
+                        <Button Content="进入选中房间" Style="{StaticResource Primary}" Margin="0,0,8,8" Click="Open_Click"/>
+                        <Button Content="创建房间" Margin="0,0,8,8" Click="Create_Click"/>
+                        <Button Content="加入房间" Margin="0,0,8,8" Click="Join_Click"/>
                         <Button Content="删除选中" Style="{StaticResource DangerButton}" Margin="0,0,8,8" Click="Remove_Click"/>
                     </WrapPanel>
                 </StackPanel>

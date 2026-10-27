@@ -600,6 +600,44 @@ namespace OpenLauncher.Core
             return string.IsNullOrWhiteSpace(text) ? "(没拿到 peer 列表；隧道没在跑时会这样)" : text;
         }
 
+        // ---------- 房间成员 ----------
+
+        static readonly Regex PeerLine = new Regex(@"^(\d{1,3}(?:\.\d{1,3}){3})\s+(\S+)(.*)$", RegexOptions.Compiled);
+
+        /// <summary>
+        /// 当前隧道里的成员（房间里有谁在线）。解析 <c>easytier-cli peer</c> 的表格输出；
+        /// 拿不到就返回空列表——调用方要自己决定显示"暂无"还是"未知"。
+        /// </summary>
+        public static List<TunnelPeer> LivePeers()
+        {
+            var list = new List<TunnelPeer>();
+            var cli = Find(CliExe);
+            if (cli == null) return list;
+
+            var text = Run(cli, "peer", 6000);
+            if (string.IsNullOrWhiteSpace(text)) text = Run(cli, "-p 127.0.0.1:15888 peer", 6000);
+            if (string.IsNullOrWhiteSpace(text)) return list;
+
+            foreach (var raw in text.Replace("\r\n", "\n").Split('\n'))
+            {
+                var m = PeerLine.Match(raw.TrimEnd());
+                if (!m.Success) continue;
+
+                var peer = new TunnelPeer { Ipv4 = m.Groups[1].Value, Hostname = m.Groups[2].Value };
+                var rest = m.Groups[3].Value;
+                foreach (var tok in rest.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var t = tok.ToLowerInvariant();
+                    if (t == "tcp" || t == "udp" || t == "quic" || t == "wg" || t == "ring" || t == "direct")
+                        peer.Tunnel = t;
+                    else if (peer.Latency.Length == 0 && Regex.IsMatch(t, @"^\d+(\.\d+)?(ms)?$"))
+                        peer.Latency = t.EndsWith("ms") ? t : t + " ms";
+                }
+                list.Add(peer);
+            }
+            return list;
+        }
+
         // ---------- 进程工具 ----------
 
         static void RunElevated(string exe, string args, string workDir)

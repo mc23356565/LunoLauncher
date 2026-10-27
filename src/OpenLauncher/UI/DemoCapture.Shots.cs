@@ -342,6 +342,14 @@ namespace OpenLauncher.UI
                     W.GoTab("more");
                     await Settle(700);
                     Snap("more");
+                    }
+
+                    // ---------- 联机（房间） ----------
+                    if (Want("coop"))
+                    {
+                        W.GoTab("coop");
+                        await Settle(700);
+                        Snap("coop");
                 }
 
                 // ---------- 整合包（最后做：要真实下载几十个文件） ----------
