@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LunoLauncher — a free, open-source launcher for Minecraft: Java Edition</title>
+<meta name="description" content="LunoLauncher is a free, open-source desktop launcher for Minecraft: Java Edition on Windows 10/11. Independent fork of OpenLauncher (GPL-3.0).">
+<style>
+  :root{--bg:#12151b;--card:#1b2029;--fg:#e8ecf3;--dim:#9aa6b8;--acc:#4f9cf9;--line:#2a3240}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 "Segoe UI",system-ui,-apple-system,sans-serif}
+  .wrap{max-width:860px;margin:0 auto;padding:56px 24px 72px}
+  h1{font-size:38px;line-height:1.15;margin:0 0 10px}
+  h2{font-size:20px;margin:40px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  p{margin:12px 0;color:var(--fg)}
+  .lead{color:var(--dim);font-size:18px;margin:0 0 28px}
+  .btn{display:inline-block;background:var(--acc);color:#08101c;font-weight:600;text-decoration:none;padding:12px 22px;border-radius:8px;margin:6px 10px 6px 0}
+  .btn.alt{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:18px 0}
+  code{background:#0d1117;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:13.5px}
+  ul{margin:10px 0;padding-left:22px}li{margin:5px 0}
+  .dim{color:var(--dim)}
+  .small{font-size:14px}
+  a{color:var(--acc)}
+  footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>LunoLauncher</h1>
+  <p class="lead">A free, open-source launcher for Minecraft: Java Edition.<br>
+  Windows 10 / 11 · single executable · GPL-3.0</p>
+
+  <a class="btn" href="https://github.com/mc23356565/LunoLauncher/releases/latest">Download for Windows</a>
+  <a class="btn alt" href="https://github.com/mc23356565/LunoLauncher">Source code</a>
+
+  <div class="card small">
+    <strong>Verify your download.</strong> Every release publishes the SHA-256 hash of the
+    executable on its release page. The executable is not yet code-signed, so Windows
+    SmartScreen may show a warning; compare the hash before running it.
+  </div>
+
+  <h2>What it is</h2>
+  <p>LunoLauncher downloads, installs and starts Minecraft: Java Edition. It manages
+  several game folders and versions, installs mod loaders (Forge, NeoForge, Fabric, Quilt,
+  OptiFine), searches and installs mods and modpacks from Modrinth and CurseForge, and
+  signs players in with their own Minecraft account.</p>
+  <p>Game files, mod loaders and community content are fetched at the user's request from
+  the official sources and public mirrors — the launcher ships without them.</p>
+
+  <h2>Microsoft account sign-in</h2>
+  <p>Sign-in uses the official Microsoft identity platform flow: OAuth 2.0 device
+  authorization grant (public client, tenant <code>consumers</code>, scope
+  <code>XboxLive.signin</code>), then Xbox Live, then XSTS. The launcher then calls exactly
+  two Minecraft Services endpoints with the player's own credentials:</p>
+  <ul>
+    <li><code>POST https://api.minecraftservices.com/authentication/login_with_xbox</code>
+      — to obtain that player's Minecraft access token;</li>
+    <li><code>GET https://api.minecraftservices.com/minecraft/profile</code>
+      — to confirm the account owns Java Edition and to read that player's UUID, username
+      and skin.</li>
+  </ul>
+  <p>No other Minecraft Services endpoints are used. Tokens are returned to the player's
+  own device: there is no account backend and no proxy, and tokens are never relayed to
+  any third party.</p>
+
+  <h2>What it does not do</h2>
+  <ul>
+    <li>It does <strong>not</strong> contain, host, mirror or redistribute Minecraft game
+      files.</li>
+    <li>It does <strong>not</strong> bypass, substitute or weaken Minecraft
+      authentication. Online play requires a genuine Microsoft account that owns
+      Minecraft: Java Edition.</li>
+    <li>It does <strong>not</strong> collect telemetry or analytics.</li>
+    <li>It is <strong>not</strong> affiliated with, endorsed by, sponsored by, or otherwise
+      connected to Mojang Studios or Microsoft.</li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>The only account data stored is the refresh token, kept on your own machine and
+  encrypted with Windows DPAPI under your Windows user. Deleting the account in the
+  launcher removes it. Nothing is sent to the maintainer.</p>
+  <p><a href="privacy.html">Read the full privacy policy</a> · <a href="terms.html">Terms of use</a></p>
+
+  <h2>Supported by</h2>
+  <p>The project is developed and maintained by independent volunteers. Free mirror
+  services used for downloads are provided by the community (BMCLAPI, MCIM and others).</p>
+
+  <h2>Open source</h2>
+  <p>Source code, issue tracker and releases:
+  <a href="https://github.com/mc23356565/LunoLauncher">github.com/mc23356565/LunoLauncher</a>.
+  Licensed under the GNU General Public License v3.0. LunoLauncher is an independent
+  fork of the OpenLauncher project; original copyright notices are retained — see
+  <a href="https://github.com/mc23356565/LunoLauncher/blob/main/NOTICE">NOTICE</a>.</p>
+
+  <h2>Contact</h2>
+  <p>Support and questions: <a href="mailto:DreemurrDawnlit@outlook.com">DreemurrDawnlit@outlook.com</a></p>
+
+  <footer>
+    Minecraft is a trademark of Mojang Synergies AB. LunoLauncher is an independent
+    community project and is not affiliated with Mojang Studios or Microsoft.<br>
+    LunoLauncher is licensed under GPL-3.0.
+  </footer>
+
+</div>
+</body>
+</html>

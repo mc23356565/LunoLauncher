@@ -1,0 +1,28 @@
+bin/
+obj/
+/dist/
+.vs/
+*.user
+*.suo
+
+/DawnLauncher/
+/LunoLauncher/
+/OpenLauncher/
+/.minecraft/
+
+# 本地研究资料（含 Mojang 条款原文与历次申请记录，不公开）
+/文本参考说明.txt
+/AppID申请表单.md
+/说明.txt
+
+private-key.xml
+*.private.xml
+
+# EasyTier 运行文件（第三方二进制，不进仓库）
+/easytier/
+/easytier-windows-x86_64/
+/EasyTier-main/
+
+# 本地构建临时目录
+/.dotnet-home/
+/.nuget/

@@ -1,0 +1,41 @@
+DawnLauncher
+===============
+
+Copyright (C) 2026 DawnLauncher contributors
+
+This program is free software: you can redistribute it and/or modify it under the terms
+of the GNU General Public License as published by the Free Software Foundation, either
+version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details: https://www.gnu.org/licenses/gpl-3.0.html
+
+
+Based on OpenLauncher
+---------------------
+
+DawnLauncher is a modified version (fork) of the OpenLauncher project.
+
+  Original work : OpenLauncher — a decentralized Minecraft launcher, licensed GPL-3.0.
+                  The build this fork is based on was obtained from the public
+                  distribution page https://honghemc.cn/openlauncher/ (a community
+                  download/collection page, not the copyright holder).
+  Modifications : rebranded as DawnLauncher; independent update channel and signing
+                  key; own website, release process and privacy policy. No changes were
+                  made to the authentication protocol or to the endpoint usage.
+
+The original copyright notices and the GPL-3.0 license text are retained in this
+repository. Nothing in this NOTICE grants permission to use the names, logos or other
+trademarks of the original project or of Mojang Studios / Microsoft.
+
+
+Trademarks and affiliation
+--------------------------
+
+Minecraft is a trademark of Mojang Synergies AB. DawnLauncher is an independent
+project. It is not affiliated with, endorsed by, sponsored by, or otherwise connected
+to Mojang Studios, Microsoft Corporation, or the OpenLauncher project.
+
+This software does not contain, host or redistribute Minecraft game files, and it does
+not bypass Minecraft authentication.

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — LunoLauncher</title>
+<style>
+  :root{--bg:#12151b;--fg:#e8ecf3;--dim:#9aa6b8;--acc:#4f9cf9;--line:#2a3240}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 "Segoe UI",system-ui,-apple-system,sans-serif}
+  .wrap{max-width:780px;margin:0 auto;padding:56px 24px 72px}
+  h1{font-size:32px;margin:0 0 6px}
+  h2{font-size:19px;margin:34px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .sub{color:var(--dim);margin:0 0 26px}
+  code{background:#0d1117;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:13.5px}
+  ul{padding-left:22px}li{margin:6px 0}
+  a{color:var(--acc)}
+  footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Privacy Policy</h1>
+<p class="sub">LunoLauncher · applies to the current release (v0.1.0) and later versions until replaced</p>
+
+<p>LunoLauncher is a desktop application for Windows. It runs entirely on the user's
+computer. This policy describes exactly what the application handles, where it is stored,
+and what leaves the device.</p>
+
+<h2>1. Summary</h2>
+<ul>
+  <li>No telemetry, no analytics, no advertising identifiers, no crash reporting to the
+    maintainer.</li>
+  <li>There is no account backend and no server operated by the maintainer for user data;
+    the maintainer never receives your account credentials or tokens.</li>
+  <li>The only account data stored is the Microsoft refresh token, on your own machine,
+    encrypted with Windows DPAPI under your Windows user.</li>
+  <li>Deleting an account in the launcher deletes the stored credential from your device.</li>
+</ul>
+
+<h2>2. Data stored on your device</h2>
+<ul>
+  <li><strong>Account credential.</strong> When you add a Microsoft account, the refresh
+    token issued by the Microsoft identity platform is stored locally, encrypted with
+    Windows DPAPI (per Windows user). Access tokens are kept in memory for the session
+    only.</li>
+  <li><strong>Settings.</strong> Language, theme, memory, Java path, mirrors, update
+    sources, window preferences and similar options, as plain files in the launcher's data
+    folder.</li>
+  <li><strong>Logs and crash reports.</strong> Local text files written only on your
+    device. Nothing is uploaded automatically; exporting a report is an explicit action
+    you take, and the file is yours to send or not send.</li>
+  <li><strong>Game files and content.</strong> Minecraft versions, mod loaders, mods,
+    resource packs and worlds that you install, in the folder you choose.</li>
+</ul>
+<p>None of the above is transmitted to the maintainer.</p>
+
+<h2>3. Network connections</h2>
+<p>The launcher contacts the following services only to perform the action you requested:</p>
+<ul>
+  <li><strong>Microsoft identity platform</strong> (<code>login.microsoftonline.com</code>)
+    — device code sign-in. Microsoft's own privacy statement applies to that interaction:
+    <a href="https://privacy.microsoft.com/privacystatement">privacy.microsoft.com</a>.</li>
+  <li><strong>Xbox Live and XSTS</strong> (<code>user.auth.xboxlive.com</code>,
+    <code>xsts.auth.xboxlive.com</code>) — to obtain the authorisation needed for
+    Minecraft services.</li>
+  <li><strong>Minecraft Services</strong> (<code>api.minecraftservices.com</code>) — to
+    sign in, to confirm game ownership and to read your own profile, UUID, username and
+    skin.</li>
+  <li><strong>Mojang / Microsoft download services</strong> and public community mirrors
+    (for example BMCLAPI, MCIM) — to download version manifests, libraries, assets and
+    Java runtimes.</li>
+  <li><strong>Modrinth</strong> and <strong>CurseForge</strong> APIs — when you search or
+    install community content.</li>
+  <li><strong>Update sources</strong> — the maintainer's signed update manifest, to check
+    for a new version. This request contains no account data.</li>
+</ul>
+<p>As with any web request, these third parties receive your IP address and the request
+itself, and their own privacy policies apply to them.</p>
+
+<h2>4. What the maintainer does not do</h2>
+<ul>
+  <li>No collection of IP addresses, device identifiers, usage statistics or crash data.</li>
+  <li>No sale, rental or sharing of personal data — there is none to share.</li>
+  <li>No advertising, no third-party trackers, no fingerprinting.</li>
+  <li>No transfer of tokens to any third party, including other launchers.</li>
+</ul>
+
+<h2>5. Children</h2>
+<p>The application is a game launcher. It does not create profiles and does not collect
+personal data. If you are a minor, use it with the consent of a parent or guardian, and
+follow the terms of Minecraft and of any server you join.</p>
+
+<h2>6. Retention and deletion</h2>
+<p>Everything listed in section 2 stays on your device until you delete it. Removing an
+account in the launcher deletes the stored refresh token. Deleting the launcher's data
+folder removes all settings and local logs. Nothing has to be requested from the
+maintainer, because the maintainer holds no copy.</p>
+
+<h2>7. Your rights</h2>
+<p>Because the maintainer stores no personal data, requests for access, correction,
+export or erasure are satisfied by the device: the data is in your own folders. For
+questions about data handled by Microsoft, Xbox Live or Modrinth/CurseForge, please refer
+to their respective policies.</p>
+
+<h2>8. Security</h2>
+<p>Tokens are protected with Windows DPAPI, which encrypts them per Windows user account.
+There is no client secret in the application, and the sign-in uses the public-client
+device code flow, which never exposes your password to the launcher. Releases publish a
+SHA-256 hash so you can verify that a downloaded file matches what the maintainer built.</p>
+
+<h2>9. Changes to this policy</h2>
+<p>If a future release changes how data is handled, this page will be updated before that
+release is published, and the change will be noted in the release notes.</p>
+
+<h2>10. Contact</h2>
+<p>Questions about this policy:
+<a href="mailto:DreemurrDawnlit@outlook.com">DreemurrDawnlit@outlook.com</a></p>
+
+<footer>
+  Minecraft is a trademark of Mojang Synergies AB. LunoLauncher is an independent
+  community project, not affiliated with Mojang Studios or Microsoft.
+  · <a href="index.html">Home</a> · <a href="terms.html">Terms of use</a>
+</footer>
+
+</div>
+</body>
+</html>

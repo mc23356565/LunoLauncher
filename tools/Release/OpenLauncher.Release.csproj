@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- 发布工具：生成签名密钥、给更新清单签名、校验清单。只有维护者需要。 -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>ol-release</AssemblyName>
+    <RootNamespace>OpenLauncher.Release</RootNamespace>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\OpenLauncher\Core\Json.cs" Link="Shared\Json.cs" />
+    <Compile Include="..\..\src\OpenLauncher\Update\UpdateCrypto.cs" Link="Shared\UpdateCrypto.cs" />
+  </ItemGroup>
+</Project>

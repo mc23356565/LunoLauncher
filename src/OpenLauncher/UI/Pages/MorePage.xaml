@@ -1,0 +1,62 @@
+<UserControl x:Class="OpenLauncher.UI.Pages.MorePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="22,18,22,10" MaxWidth="900">
+            <Border Style="{StaticResource CardBox}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="/Assets/icon.png" Width="72" Height="72" RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="0,0,18,0" VerticalAlignment="Top"/>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock x:Name="AboutTitle" Text="LunoLauncher" Style="{StaticResource H1}"/>
+                        <TextBlock x:Name="AboutSub" Style="{StaticResource Sub}" Margin="0,2,0,8"/>
+                        <TextBlock Style="{StaticResource Body}" Text="一个没有中心服务器的 Minecraft 启动器：下载走官方源和公益镜像，更新走签名清单，代码开源（GPL-3.0），任何人都可以编译、镜像、接手维护。我们不保证持续更新——但保证你不需要我们也能继续用、继续更新。"/>
+                        <WrapPanel Margin="0,12,0,0">
+                            <Button Content="项目主页" Margin="0,0,8,6" Click="Repo_Click"/>
+                            <Button Content="检查更新" Margin="0,0,8,6" Click="Update_Click"/>
+                            <Button Content="打开数据目录" Margin="0,0,8,6" Click="DataDir_Click"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource CardBox}">
+                <StackPanel>
+                    <TextBlock Text="工具" Style="{StaticResource H2}"/>
+                    <WrapPanel>
+                        <Button Content="分析崩溃日志" Margin="0,0,8,8" Click="Analyze_Click"/>
+                        <Button Content="查看启动器日志" Margin="0,0,8,8" Click="LauncherLog_Click"/>
+                        <Button Content="清理缓存与临时文件" Margin="0,0,8,8" Click="Clean_Click"/>
+                        <Button Content="测试下载源连通性" Margin="0,0,8,8" Click="Ping_Click"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardBox}">
+                <StackPanel>
+                    <TextBlock Text="常见问题" Style="{StaticResource H2}"/>
+                    <TextBlock Style="{StaticResource Body}">
+                        <Run FontWeight="SemiBold" Text="下载很慢 / 失败？"/><LineBreak/>
+                        <Run Text="设置 → 下载 里切换“镜像优先 / 官方优先”，或者关掉连不上的镜像。所有文件都带校验，换源不会下到坏文件。"/><LineBreak/><LineBreak/>
+                        <Run FontWeight="SemiBold" Text="微软登录提示要配置 Client ID？"/><LineBreak/>
+                        <Run Text="去中心化启动器不共用一个会被封的 ID。去 设置 → 账户 填你自己或你信任的发行版提供的 Client ID（本发行版只支持微软正版登录）。"/><LineBreak/><LineBreak/>
+                        <Run FontWeight="SemiBold" Text="原作者不更新了怎么办？"/><LineBreak/>
+                        <Run Text="游戏和 Mod 列表都是实时从上游获取的，启动器旧了也能装新版本。需要程序更新时，在 设置 → 更新 添加社区维护者的公钥和更新源即可。"/><LineBreak/><LineBreak/>
+                        <Run FontWeight="SemiBold" Text="能导入 PCL / HMCL 的游戏目录吗？"/><LineBreak/>
+                        <Run Text="能。版本选择 → 添加已有的游戏目录，选那个 .minecraft 文件夹，版本隔离的设置会自动识别。"/>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardBox}">
+                <StackPanel>
+                    <TextBlock Text="致谢" Style="{StaticResource H2}"/>
+                    <TextBlock Style="{StaticResource Body}" Text="BMCLAPI（bangbang93）· MCIM 镜像 · Modrinth · CurseForge · authlib-injector（yushijinhun）· Fabric · Quilt · Forge · NeoForge · Mojang。本启动器与 Mojang、Microsoft 无关；Minecraft 是 Mojang AB 的商标。灵感来自 PCL 等国内启动器前辈。"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
