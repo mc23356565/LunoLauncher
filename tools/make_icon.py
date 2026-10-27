@@ -1,64 +1,100 @@
-"""生成启动器图标（像素风等轴方块）。运行：python tools/make_icon.py"""
-from PIL import Image, ImageDraw
+"""生成 LunoLauncher 图标（现代化扁平风格）。
+
+设计：圆角方形底 + 紫蓝渐变，白色月牙 + 右侧一颗小星点。
+“Luno” 取月亮之意；月牙在 16px 下依然可辨认，也不会和 Minecraft 的方块图标混淆。
+
+运行：python tools/make_icon.py
+"""
 import os
+from PIL import Image, ImageDraw, ImageFilter, ImageChops
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, '..', 'src', 'OpenLauncher', 'Assets')
 os.makedirs(OUT, exist_ok=True)
 
-N = 32  # 像素画布
-img = Image.new('RGBA', (N, N), (0, 0, 0, 0))
-px = img.load()
+S = 1024                      # 设计尺寸，最后再缩小（超采样，边缘更干净）
+RADIUS = int(S * 0.235)       # 圆角半径 ≈ squircle
 
-# 等轴方块：顶面 / 左面 / 右面
-top = [(0x7C, 0xD9, 0x5B), (0x5F, 0xC0, 0x45)]
-left = [(0x9A, 0x6B, 0x45), (0x86, 0x5A, 0x38)]
-right = [(0x6E, 0x4A, 0x2E), (0x5C, 0x3D, 0x25)]
-grass_l = [(0x5F, 0xC0, 0x45), (0x4C, 0xA6, 0x37)]
-grass_r = [(0x48, 0x9C, 0x33), (0x3B, 0x85, 0x2A)]
+# 渐变：左上偏紫，右下偏蓝
+C1 = (108, 92, 246)           # #6C5CF6  violet
+C2 = (59, 130, 246)           # #3B82F6  blue
 
-cx, cy = 16, 9   # 顶面中心
-w = 13           # 半宽
-import random
-random.seed(7)
 
-def put(x, y, c):
-    if 0 <= x < N and 0 <= y < N:
-        px[x, y] = c + (255,)
+def linear_gradient(size, top_left, bottom_right, angle_bias=0.65):
+    """生成一张对角渐变图。"""
+    w, h = size
+    base = Image.new('RGB', (1, h))
+    px = base.load()
+    for y in range(h):
+        t = y / max(1, h - 1)
+        px[0, y] = tuple(int(top_left[i] + (bottom_right[i] - top_left[i]) * t) for i in range(3))
+    grad = base.resize((w, h), Image.BILINEAR)
+    # 再横向叠一层，让左上更亮一点
+    horiz = Image.new('RGB', (w, 1))
+    hp = horiz.load()
+    for x in range(w):
+        t = (x / max(1, w - 1)) * angle_bias
+        hp[x, 0] = tuple(int(255 * 0) for _ in range(3))
+    return grad
 
-for y in range(N):
-    for x in range(N):
-        dx, dy = x - cx + 0.5, y - cy + 0.5
-        # 顶面菱形：|dx|/w + |dy|/(w/2) <= 1
-        if abs(dx) / w + abs(dy) / (w / 2) <= 1.0:
-            put(x, y, top[(x * 3 + y * 5 + random.randint(0, 2)) % 2])
-        else:
-            # 侧面：在菱形下半边缘往下延伸 h 像素
-            h = 13
-            if -w <= dx < 0:
-                edge = cy + (w + dx) / 2  # 左下边
-                if edge <= y + 0.5 <= edge + h:
-                    depth = y + 0.5 - edge
-                    pal = grass_l if depth < 3.2 else left
-                    put(x, y, pal[(x * 7 + y * 3 + random.randint(0, 1)) % 2])
-            elif 0 <= dx <= w:
-                edge = cy + (w - dx) / 2
-                if edge <= y + 0.5 <= edge + h:
-                    depth = y + 0.5 - edge
-                    pal = grass_r if depth < 3.2 else right
-                    put(x, y, pal[(x * 5 + y * 7 + random.randint(0, 1)) % 2])
 
-# 去中心化标记：顶面上三个相连的白点（节点网）
-nodes = [(16, 5), (10, 11), (22, 11)]
-d = ImageDraw.Draw(img)
-for a in range(3):
-    for b in range(a + 1, 3):
-        d.line([nodes[a], nodes[b]], fill=(255, 255, 255, 170), width=1)
-for (x, y) in nodes:
-    d.rectangle([x - 1, y - 1, x, y], fill=(255, 255, 255, 255))
+def rounded_mask(size, radius):
+    m = Image.new('L', size, 0)
+    d = ImageDraw.Draw(m)
+    d.rounded_rectangle([0, 0, size[0] - 1, size[1] - 1], radius=radius, fill=255)
+    return m
 
-big = img.resize((256, 256), Image.NEAREST)
-big.save(os.path.join(OUT, 'icon.png'))
-sizes = [(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)]
-big.save(os.path.join(OUT, 'icon.ico'), sizes=sizes)
-print('ok', OUT)
+
+img = Image.new('RGBA', (S, S), (0, 0, 0, 0))
+
+# --- 底：对角渐变 + 圆角遮罩 ---
+grad = Image.new('RGBA', (S, S))
+gp = grad.load()
+for y in range(S):
+    for x in range(S):
+        t = (x / S * 0.55 + y / S * 0.45)
+        gp[x, y] = (
+            int(C1[0] + (C2[0] - C1[0]) * t),
+            int(C1[1] + (C2[1] - C1[1]) * t),
+            int(C1[2] + (C2[2] - C1[2]) * t),
+            255,
+        )
+img.paste(grad, (0, 0), rounded_mask((S, S), RADIUS))
+
+# --- 顶部一层柔和高光，制造体积感 ---
+glow = Image.new('L', (S, S), 0)
+gd = ImageDraw.Draw(glow)
+gd.ellipse([-S * 0.25, -S * 0.75, S * 0.9, S * 0.45], fill=52)
+glow = glow.filter(ImageFilter.GaussianBlur(S * 0.09))
+white = Image.new('RGBA', (S, S), (255, 255, 255, 255))
+img.paste(white, (0, 0), Image.composite(glow, Image.new('L', (S, S), 0), rounded_mask((S, S), RADIUS)))
+
+# --- 月牙：大圆减去偏移圆 ---
+cx, cy = S * 0.425, S * 0.525
+r = S * 0.285
+cut_dx, cut_dy = S * 0.128, -S * 0.050
+cut_r = S * 0.258
+
+moon_mask = Image.new('L', (S, S), 0)
+md = ImageDraw.Draw(moon_mask)
+md.ellipse([cx - r, cy - r, cx + r, cy + r], fill=255)
+cut = Image.new('L', (S, S), 0)
+cd = ImageDraw.Draw(cut)
+cd.ellipse([cx - cut_r + cut_dx, cy - cut_r + cut_dy, cx + cut_r + cut_dx, cy + cut_r + cut_dy], fill=255)
+moon_mask = ImageChops.subtract(moon_mask, cut)
+
+img.paste(Image.new('RGBA', (S, S), (255, 255, 255, 255)), (0, 0), moon_mask)
+
+# --- 星点：月牙右上方一颗小圆 ---
+star_r = S * 0.036
+sx, sy = S * 0.700, S * 0.300
+sd = ImageDraw.Draw(img)
+sd.ellipse([sx - star_r, sy - star_r, sx + star_r, sy + star_r], fill=(255, 255, 255, 235))
+
+# --- 输出 ---
+png = img.resize((256, 256), Image.LANCZOS)
+png.save(os.path.join(OUT, 'icon.png'))
+
+ico_sizes = [(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)]
+img.resize((256, 256), Image.LANCZOS).save(os.path.join(OUT, 'icon.ico'), sizes=ico_sizes)
+print('ok ->', OUT)

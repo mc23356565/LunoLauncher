@@ -231,7 +231,7 @@ namespace OpenLauncher
             if (Environment.GetCommandLineArgs().Contains("--updated"))
                 Toast($"已更新到 {AppInfo.VersionString}", ToastKind.Ok);
 
-            if (Settings.AutoCheckUpdate)
+            if (Branding.EnableUpdater && Settings.AutoCheckUpdate)
             {
                 try
                 {

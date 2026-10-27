@@ -54,10 +54,15 @@ namespace OpenLauncher.UI
                 var fabric = new Instance(repo, "1.20.1-Fabric_0.19.5");
                 Settings.SelectedVersion = fabric.Id;
 
-                // 账号：离线 Steve + 默认皮肤头像
-                var acc = AccountStore.All.FirstOrDefault(a => a.Name == "Steve") ?? OfflineAuth.Create("Steve");
-                AccountStore.AddOrUpdate(acc);
-                AccountStore.Selected = acc;
+                // 账号：发行版可能关闭了离线账号，关闭时就用已有账号（或空账号状态）截图
+                var acc = AccountStore.All.FirstOrDefault(a => a.Name == "Steve");
+                if (acc == null && Branding.AllowOfflineAccount)
+                {
+                    acc = OfflineAuth.Create("Steve");
+                    AccountStore.AddOrUpdate(acc);
+                }
+                if (acc == null) acc = AccountStore.All.FirstOrDefault();
+                if (acc != null) AccountStore.Selected = acc;
                 BitmapSource head = null;
                 var skin = Path.Combine(OutDir, "steve.png");
                 if (File.Exists(skin)) head = Skins.RenderHead(File.ReadAllBytes(skin), 64);

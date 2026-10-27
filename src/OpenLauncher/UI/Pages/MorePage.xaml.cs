@@ -17,6 +17,8 @@ namespace OpenLauncher.UI.Pages
         public MorePage()
         {
             InitializeComponent();
+            // 更新功能暂时关闭时，把入口一起隐藏
+            UpdateBtn.Visibility = Branding.EnableUpdater ? Visibility.Visible : Visibility.Collapsed;
             AboutTitle.Text = Branding.DisplayName;
             AboutSub.Text = $"版本 {AppInfo.VersionString} · {Branding.Tagline} · 数据目录 {Paths.DataDir}";
         }

@@ -29,9 +29,12 @@ namespace OpenLauncher.UI
             r["AccentPressed"] = Frozen(Mix(c, Colors.Black, 0.12));
             r["AccentSoft"] = Frozen(Mix(c, Colors.White, 0.9));
             r["AccentSoft2"] = Frozen(Mix(c, Colors.White, 0.78));
-            var title = new LinearGradientBrush(c, Mix(c, Color.FromRgb(0x7C, 0x5C, 0xFA), 0.22), 0);
+            // 标题栏跟着主题色走：上浅下深的同色渐变，换主题时能明显看出来
+            var title = new LinearGradientBrush(Mix(c, Colors.White, 0.91), Mix(c, Colors.White, 0.74), 90);
             title.Freeze();
             r["TitleBrush"] = title;
+            // 整个界面的底色也带一点主题色，但保持足够浅，不影响可读性
+            r["Bg"] = Frozen(Mix(c, Colors.White, 0.965));
         }
 
         static SolidColorBrush Frozen(Color c) { var b = new SolidColorBrush(c); b.Freeze(); return b; }

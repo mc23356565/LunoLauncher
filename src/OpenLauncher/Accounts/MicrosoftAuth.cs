@@ -47,7 +47,7 @@ namespace OpenLauncher.Accounts
 
         public static string NoClientIdMessage =>
             "还没有配置微软登录用的 Client ID。\n" +
-            $"{Branding.DisplayName} 是去中心化的开源项目，不内置任何人的 Client ID，需要你自己申请一个：\n" +
+            $"{Branding.DisplayName} 是开源项目，不内置他人的 Client ID，需要你自己申请一个：\n" +
             "1. 打开 Azure 门户（portal.azure.com）→“应用注册”→ 新注册，受支持的账户类型选“个人 Microsoft 账户”；\n" +
             "2. 在该应用的“身份验证”页面把“允许公共客户端流”设为“是”（公共客户端）；\n" +
             $"3. 到 Mojang 的申请表（{ReviewFormUrl}）为这个应用申请 Minecraft API 访问权限，等待审核通过；\n" +

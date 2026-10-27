@@ -36,6 +36,9 @@ namespace OpenLauncher.UI.Pages
         public SettingsPage()
         {
             InitializeComponent();
+            // 更新功能暂时关闭时，把入口一起隐藏
+            NavUpdate.Visibility = Branding.EnableUpdater ? Visibility.Visible : Visibility.Collapsed;
+            SecUpdate.Visibility = Branding.EnableUpdater ? Visibility.Visible : Visibility.Collapsed;
             foreach (var (name, hex) in Theme.Presets)
             {
                 var b = new Button { Style = (Style)FindResource("Ghost"), ToolTip = name, Padding = new Thickness(3), Margin = new Thickness(0, 0, 6, 6), Tag = hex };

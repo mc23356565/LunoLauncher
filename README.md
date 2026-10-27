@@ -41,7 +41,7 @@ Xbox Live, then XSTS, then:
 
 No other Minecraft Services endpoints are used. Access to those endpoints requires an
 **approved application (client) ID**; details and the current status are documented in
-[微软登录.md](微软登录.md).
+（申请细节属于发行者内部流程，不在本仓库维护）。
 
 ## Account policy
 
@@ -85,7 +85,7 @@ Requires the .NET SDK 8 or newer (no Visual Studio needed):
 Every push to `main` is built automatically by GitHub Actions, and a tag `v*` publishes
 the executable to Releases with its SHA-256 in the release notes. Releases, update-manifest
 signing, key rotation and community hand-over are documented in
-[发布与接手.md](发布与接手.md).
+（发版与接手流程属于维护者内部流程，不在本仓库维护）。
 
 ## Fork and credits
 
@@ -101,7 +101,7 @@ Minecraft is a trademark of Mojang Synergies AB.
 
 # LunoLauncher（中文）
 
-去中心化的 Minecraft Java 版启动器，免费、开源，**OpenLauncher 的独立分支**（GPL-3.0）。
+轻量的 Minecraft Java 版启动器，免费、开源，**OpenLauncher 的独立分支**（GPL-3.0）。
 
 - 下载页面：https://mc23356565.github.io/LunoLauncher/
 - 发布页（exe + SHA-256）：https://github.com/mc23356565/LunoLauncher/releases
@@ -113,7 +113,7 @@ Minecraft is a trademark of Mojang Synergies AB.
 |---|---|
 | 启动 | 一键启动；自动补全缺失文件；自动选择 / 下载合适的 Java；自动分配内存；版本隔离；自定义窗口标题、窗口大小、全屏；启动后自动进服；启动后最小化 / 隐藏 / 关闭；实时游戏日志；导出启动脚本 |
 | 账号 | 微软正版（设备代码登录，需要已获批的 Client ID）；皮肤头像 |
-| 联机 | 局域网世界 + 虚拟局域网直连：房间列表、从日志自动读端口、一键复制地址、启动即进服（见 [联机.md](联机.md)） |
+| 联机 | 局域网世界 + 虚拟局域网直连：房间列表、从日志自动读端口、一键复制地址、启动即进服 |
 | 下载游戏 | 正式版 / 快照 / 远古版 / 愚人节版；Forge、NeoForge、Fabric（可同时装 Fabric API）、Quilt；自己执行 Forge 安装器的处理器，下载可走镜像 |
 | 社区资源 | Modrinth + CurseForge 双源搜索 Mod / 整合包 / 资源包 / 光影包 / 数据包；常见中文名搜索；自动补齐前置 Mod；按版本和加载器筛选 |
 | 整合包 | 导入 Modrinth（.mrpack）和 CurseForge（.zip）整合包；导出为 .mrpack |

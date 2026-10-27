@@ -92,18 +92,16 @@
                     </StackPanel>
                 </Border>
 
-                <!-- 去中心化说明 -->
+                <!-- 产品说明 -->
                 <Border Style="{StaticResource CardBox}">
                     <StackPanel>
-                        <TextBlock Text="这个启动器没有服务器" Style="{StaticResource H2}"/>
+                        <TextBlock Text="为什么用它" Style="{StaticResource H2}"/>
                         <TextBlock Style="{StaticResource Body}">
-                            <Run Text="• 游戏、加载器、Mod 全部直接从官方源和公益镜像下载（Mojang / BMCLAPI / Modrinth / CurseForge / MCIM），哪个能连用哪个。"/>
+                            <Run Text="• 游戏、加载器、Mod 直接从官方源下载，并逐个校验文件完整性；连不上时自动换用公益镜像。"/>
                             <LineBreak/>
-                            <Run Text="• 版本列表实时从上游获取，启动器本身就算很久不更新，也能装到最新版本。"/>
+                            <Run Text="• 版本列表实时从上游获取，启动器久未更新也能装到最新版本。"/>
                             <LineBreak/>
-                            <Run Text="• 启动器更新从多个地址拉取签名清单，签名对得上才会更新；任何人都能做镜像，社区也能接手发版。"/>
-                            <LineBreak/>
-                            <Run Text="• 不收集任何数据，账号令牌只加密保存在你这台电脑上。"/>
+                            <Run Text="• 不收集任何数据，账号令牌用 Windows DPAPI 加密，只保存在你这台电脑上。"/>
                         </TextBlock>
                     </StackPanel>
                 </Border>

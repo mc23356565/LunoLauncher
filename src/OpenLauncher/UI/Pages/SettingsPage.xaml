@@ -13,7 +13,7 @@
                 <RadioButton GroupName="st" Style="{StaticResource SideNav}" Tag="&#xE896;" Content="下载" Checked="Jump_Checked" CommandParameter="download"/>
                 <RadioButton GroupName="st" Style="{StaticResource SideNav}" Tag="&#xE77B;" Content="账户" Checked="Jump_Checked" CommandParameter="account"/>
                 <RadioButton GroupName="st" Style="{StaticResource SideNav}" Tag="&#xE790;" Content="个性化" Checked="Jump_Checked" CommandParameter="ui"/>
-                <RadioButton GroupName="st" Style="{StaticResource SideNav}" Tag="&#xE895;" Content="更新" Checked="Jump_Checked" CommandParameter="update"/>
+                <RadioButton x:Name="NavUpdate" GroupName="st" Style="{StaticResource SideNav}" Tag="&#xE895;" Content="更新" Checked="Jump_Checked" CommandParameter="update"/>
             </StackPanel>
         </Border>
 
@@ -159,7 +159,7 @@
                         <TextBlock Text="账户与 API" Style="{StaticResource H2}"/>
                         <TextBlock Text="微软登录 Client ID（Azure 应用，需已获得 Minecraft API 权限）" Style="{StaticResource Sub}"/>
                         <TextBox x:Name="MsClientId" Margin="0,4,0,4" Tag="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" LostFocus="Any_Changed"/>
-                        <TextBlock Style="{StaticResource Sub}" Margin="0,0,0,10" Text="去中心化：每个发行版 / 每个人都可以用自己申请的 ID，一个被封不影响别人。申请步骤见 docs/微软登录.md。"/>
+                        <TextBlock Style="{StaticResource Sub}" Margin="0,0,0,10" Text="每个发行版使用自己申请的 Client ID，一个失效不影响其他人。申请步骤见 docs/微软登录.md。"/>
                         <TextBlock Text="CurseForge API Key（可选）" Style="{StaticResource Sub}"/>
                         <TextBox x:Name="CfKey" Margin="0,4,0,4" Tag="留空则通过 MCIM 镜像访问 CurseForge" LostFocus="Any_Changed"/>
                         <TextBlock Style="{StaticResource Sub}" Text="在 console.curseforge.com 免费申请。填了以后官方源可用，镜像挂了也能搜 CurseForge。"/>

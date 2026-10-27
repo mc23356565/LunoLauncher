@@ -1,7 +1,7 @@
 <Window x:Class="OpenLauncher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Luno Launcher" Width="980" Height="620" MinWidth="840" MinHeight="540"
+        Title="LunoLauncher" Width="980" Height="620" MinWidth="840" MinHeight="540"
         WindowStartupLocation="CenterScreen" Background="{DynamicResource Bg}"
         FontFamily="{StaticResource UiFont}" Foreground="{DynamicResource Text}"
         UseLayoutRounding="True" SnapsToDevicePixels="True" Icon="Assets/icon.png"
@@ -23,13 +23,13 @@
         <Image x:Name="BgImage" Grid.Row="1" Stretch="UniformToFill" Opacity="0.28" IsHitTestVisible="False"/>
 
         <!-- 标题栏 -->
-        <Border Background="{DynamicResource TitleBrush}">
+        <Border Background="{DynamicResource TitleBrush}" BorderBrush="{DynamicResource Line}" BorderThickness="0,0,0,1">
             <Grid>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
                     <Image Source="Assets/icon.png" Width="26" Height="26" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                    <TextBlock Text="Luno Launcher" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" Margin="9,0,0,1"/>
-                    <Border Background="#33FFFFFF" CornerRadius="4" Padding="5,1" Margin="8,2,0,0" VerticalAlignment="Center">
-                        <TextBlock x:Name="VersionTag" Text="v0.1" Foreground="White" FontSize="10.5"/>
+                    <TextBlock Text="LunoLauncher" Foreground="{DynamicResource Text}" FontSize="15.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="9,0,0,1"/>
+                    <Border Background="{DynamicResource AccentSoft}" CornerRadius="6" Padding="6,1" Margin="8,2,0,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="VersionTag" Text="v0.1" Foreground="{DynamicResource Accent}" FontSize="10.5"/>
                     </Border>
                 </StackPanel>
 

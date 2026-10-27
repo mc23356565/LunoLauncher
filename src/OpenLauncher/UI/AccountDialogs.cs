@@ -105,7 +105,7 @@ namespace OpenLauncher.UI
             {
                 var go = await Dialogs.ShowAsync("需要先配置微软登录",
                     Dialogs.Text("微软正版登录需要一个“Azure 应用 Client ID”，并且要向 Mojang 申请 Minecraft API 权限。\n\n" +
-                                 "去中心化的启动器不能共用一个会被封的 ID，所以由发布者或你自己申请：\n" +
+                                 "本项目不能共用一个会被封的 Client ID，所以由发布者或你自己申请：\n" +
                                  "1. 在 Azure 门户注册应用（个人 Microsoft 账户，允许公共客户端流）\n" +
                                  "2. 在 Mojang 的申请表提交 Client ID，等待审核通过\n" +
                                  "3. 把 Client ID 填到 设置 → 账户\n\n详细步骤见项目文档 docs/微软登录.md。"),

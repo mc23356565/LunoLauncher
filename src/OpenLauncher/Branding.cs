@@ -8,8 +8,8 @@ namespace OpenLauncher
     public static class Branding
     {
         public const string AppName = "LunoLauncher";
-        public const string DisplayName = "Luno Launcher";
-        public const string Tagline = "去中心化的 Minecraft 启动器";
+        public const string DisplayName = "LunoLauncher";
+        public const string Tagline = "轻量、开放的 Minecraft 启动器";
 
         /// <summary>
         /// 是否允许离线账号。**官方发行版保持 false**：
@@ -26,6 +26,12 @@ namespace OpenLauncher
         /// 关闭后：账号类型里没有「外置登录」，旧的 Yggdrasil 账号也无法启动。
         /// </summary>
         public static readonly bool AllowThirdPartyLogin = false;
+
+        /// <summary>
+        /// 是否启用内置更新功能（签名清单 / 自更新）。
+        /// 暂时关闭：这一版不对外提供更新，界面里的更新入口会一起隐藏。
+        /// </summary>
+        public static readonly bool EnableUpdater = false;
 
         /// <summary>主页 / 源码下载（仅用于"关于"页面和 User-Agent，不是更新的唯一来源）</summary>
         public const string RepoUrl = "https://github.com/mc23356565/LunoLauncher";
