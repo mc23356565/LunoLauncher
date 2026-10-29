@@ -166,3 +166,25 @@ not be approved. This requirement applies regardless of server configuration."*
 
 两项分别由 `src/LunoLauncher/Branding.cs` 的 `AllowOfflineAccount` 与 `AllowThirdPartyLogin`
 控制，默认均为 `false`；旧配置里残留的离线 / 外置登录账号会被拒绝启动，且没有开关可以打开。
+
+## 内置 Client ID 与发布方式（维护者）
+
+官方发布的 exe 自带一个**已通过 Mojang 审核**的 Client ID，所以下载下来就能登录微软账号。
+这个值**不在源码里、也不在仓库里**，三种注入方式：
+
+| 来源 | 用法 |
+|---|---|
+| 构建参数 | `.\build.ps1 -MsClientId 00000000-0000-0000-0000-000000000000` |
+| 本地文件 | 在仓库根放 `clientid.txt`（只写一行 GUID，已在 `.gitignore` 里），`build.ps1` 自动读 |
+| CI | 仓库 Settings → Secrets and variables → Actions 新建 `MS_CLIENT_ID`，工作流会 `-p:MsClientId=` 传给编译器 |
+
+取到的值由 MSBuild 生成到 `obj\BuiltInClientId.g.cs`，编译成 `Branding.DefaultMicrosoftClientId`。
+什么都没提供时是空字符串，行为与以前一致：提示用户自己去申请。
+
+**为什么用注入而不是混淆**：设备代码流属于 OAuth 2.0 的公共客户端（public client），
+Client ID 按设计就是公开的 —— 它会出现在请求体、浏览器地址栏和 exe 里的字符串常量中，
+任何人都能取出来；真正需要保密的是**客户端密钥 client secret**，而这条流程根本不用它。
+把 Client ID 排除在源码外能达到的真实目的是：**别人 fork 你的仓库后不能直接编译出一个能登录的版本**，
+必须自己走一遍申请流程（`https://aka.ms/mce-reviewappid`）。混淆改变不了这一点。
+
+自己 fork 后要发布，请自己申请 Client ID；不要复用别人的。

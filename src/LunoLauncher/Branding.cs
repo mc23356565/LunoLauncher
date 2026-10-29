@@ -1,3 +1,6 @@
+using System;
+using System.Text;
+
 namespace LunoLauncher
 {
     /// <summary>
@@ -59,10 +62,19 @@ namespace LunoLauncher
 
         /// <summary>
         /// 微软正版登录用的 Azure 应用 Client ID。
-        /// 需要自己在 Azure 注册应用并向 Mojang 申请 Minecraft API 白名单后填入；
-        /// 留空时用户可在 设置 → 账户 里填自己的（但同样需要该 ID 已被批准）。
+        /// 官方发行版的值由**构建时注入**（-p:MsClientId 或仓库根的 clientid.txt），
+        /// 源码和仓库里都没有；自己编译时为空，用户可在 设置 → 账户 里填自己的。
+        /// 注入时以 Base64 存放，避免用 strings 直接扫出 GUID（挡自动化采集，不是加密）。
         /// </summary>
-        public const string DefaultMicrosoftClientId = "";
+        public static readonly string DefaultMicrosoftClientId = Decode(BuiltInClientId.Encoded);
+
+        /// <summary>把内置的 Base64 Client ID 解出来；没有内置值或格式不对时返回原样。</summary>
+        static string Decode(string encoded)
+        {
+            if (string.IsNullOrEmpty(encoded)) return "";
+            try { return Encoding.UTF8.GetString(Convert.FromBase64String(encoded)); }
+            catch { return encoded; }
+        }
 
         /// <summary>CurseForge API Key（可选）。留空时自动走无需 Key 的镜像。</summary>
         public const string DefaultCurseForgeApiKey = "";

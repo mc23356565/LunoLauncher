@@ -1,11 +1,15 @@
-# Build the release exe -> dist\LunoLauncher.exe
+﻿# Build the release exe -> dist\LunoLauncher.exe
 # (single file; .NET Framework 4.8 ships with Windows 10/11, nothing to install)
 #
 # Needs .NET SDK 8 or newer (https://dotnet.microsoft.com/download). No Visual Studio.
 # Usage: .\build.ps1            build + self-sign
 #        .\build.ps1 -NoSign    build only
 
-param([switch]$NoSign)
+param(
+    [switch]$NoSign,
+    # Microsoft Client ID baked into the exe. Empty = read clientid.txt in the repo root, if any.
+    [string]$MsClientId = ''
+)
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -15,7 +19,17 @@ $dotnet = (Get-Command dotnet -ErrorAction SilentlyContinue).Source
 if (-not $dotnet -and (Test-Path "$env:USERPROFILE\.dotnet\dotnet.exe")) { $dotnet = "$env:USERPROFILE\.dotnet\dotnet.exe" }
 if (-not $dotnet) { throw 'dotnet not found: install the .NET SDK first.' }
 
-& $dotnet build "$root\src\LunoLauncher\LunoLauncher.csproj" -c Release -nologo
+# Client ID 以 Base64 形式注入，exe 里不会出现明文 GUID（挡自动化采集，不是加密）
+$cidFile = Join-Path $root 'clientid.txt'
+$cidValue = $MsClientId
+if (-not $cidValue -and (Test-Path $cidFile)) { $cidValue = (Get-Content $cidFile -Raw).Trim() }
+
+$buildArgs = @("$root\src\LunoLauncher\LunoLauncher.csproj", '-c', 'Release', '-nologo')
+if ($cidValue) {
+    $enc = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($cidValue))
+    $buildArgs += "-p:MsClientIdEncoded=$enc"
+}
+& $dotnet build @buildArgs
 if ($LASTEXITCODE -ne 0) { throw 'Build failed.' }
 
 $dist = Join-Path $root 'dist'
@@ -38,6 +52,13 @@ if (-not $NoSign -and (Test-Path "$root\sign.ps1")) {
     } catch {
         Write-Host "Sign skipped: $($_.Exception.Message)"
     }
+}
+
+if ($cidValue) {
+    $from = if ($MsClientId) { 'from -MsClientId' } else { 'from clientid.txt' }
+    "ClientID: $($cidValue.Substring(0, [Math]::Min(8, $cidValue.Length)))... ($from, stored as Base64)"
+} else {
+    "ClientID: NOT injected - this build cannot sign in to Microsoft"
 }
 
 $hash = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLower()

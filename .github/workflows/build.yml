@@ -20,7 +20,13 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Build
-        run: dotnet build src/LunoLauncher/LunoLauncher.csproj -c Release -nologo
+        # Client ID 从仓库 Secret 注入，以 Base64 存放，不进源码。没配置时为空（等同开源版）。
+        shell: pwsh
+        run: |
+          $cid = '${{ secrets.MS_CLIENT_ID }}'.Trim()
+          $enc = ''
+          if ($cid) { $enc = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($cid)) }
+          dotnet build src/LunoLauncher/LunoLauncher.csproj -c Release -nologo "-p:MsClientIdEncoded=$enc"
 
       - name: Hash
         id: hash

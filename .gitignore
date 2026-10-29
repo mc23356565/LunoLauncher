@@ -31,3 +31,6 @@ private-key.xml
 /联机.md
 /微软登录.md
 /发布与接手.md
+
+# 微软登录的 Client ID（不进仓库；构建时由 -p:MsClientId 或 CI secret 注入）
+/clientid.txt

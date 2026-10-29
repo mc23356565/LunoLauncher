@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -10,7 +10,7 @@
     <RootNamespace>LunoLauncher</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
-    <Version>0.3.2</Version>
+    <Version>0.4.0</Version>
     <Product>LunoLauncher</Product>
     <Description>轻量的 Minecraft 启动器（OpenLauncher 分支）</Description>
     <Copyright>LunoLauncher contributors. Based on OpenLauncher, GPL-3.0.</Copyright>
@@ -48,4 +48,29 @@
     <EmbeddedResource Include="Assets\licenses\THIRD-PARTY.txt" LogicalName="Luno.License.THIRD-PARTY.txt" />
   </ItemGroup>
 
+  <!--
+    微软登录的 Client ID 不打进源码、也不进仓库。
+    取值顺序：-p:MsClientId=xxx  →  仓库根的 clientid.txt（已 .gitignore）→ 空。
+    取到的值写进 obj\BuiltInClientId.g.cs，编译成 Branding.DefaultMicrosoftClientId：
+    官方发行版开箱就能登录；fork 出去的人必须自己申请一个。
+  -->
+  <PropertyGroup>
+    <ClientIdFile>$(MSBuildProjectDirectory)\..\..\clientid.txt</ClientIdFile>
+    <MsClientId Condition="'$(MsClientId)' == '' and Exists('$(ClientIdFile)')">$([System.IO.File]::ReadAllText('$(ClientIdFile)').Trim())</MsClientId>
+    <!-- 以 Base64 存进程序集，避免 strings 直接扫到 GUID（不是加密，只挡自动化采集）。
+         build.ps1 / CI 会算好 Base64 传进来；直接传 -p:MsClientId=明文 也能用（退化成明文存放）。 -->
+    <MsClientIdEncoded Condition="'$(MsClientIdEncoded)' == ''">$(MsClientId)</MsClientIdEncoded>
+  </PropertyGroup>
+
+  <Target Name="GenerateBuiltInClientId" BeforeTargets="BeforeCompile">
+    <WriteLinesToFile
+      File="$(IntermediateOutputPath)BuiltInClientId.g.cs"
+      Overwrite="true"
+      WriteOnlyWhenDifferent="true"
+      Lines="// auto-generated at build time: Microsoft Client ID, Base64 encoded (not in source control);namespace LunoLauncher;{;internal static class BuiltInClientId;{;public const string Encoded = &quot;$(MsClientIdEncoded)&quot;%3b;};}" />
+    <ItemGroup>
+      <Compile Include="$(IntermediateOutputPath)BuiltInClientId.g.cs" />
+      <FileWrites Include="$(IntermediateOutputPath)BuiltInClientId.g.cs" />
+    </ItemGroup>
+  </Target>
 </Project>

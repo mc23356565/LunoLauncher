@@ -104,11 +104,12 @@ namespace LunoLauncher.UI
             if (!MicrosoftAuth.HasClientId)
             {
                 var go = await Dialogs.ShowAsync("需要先配置微软登录",
-                    Dialogs.Text("微软正版登录需要一个“Azure 应用 Client ID”，并且要向 Mojang 申请 Minecraft API 权限。\n\n" +
-                                 "本项目不能共用一个会被封的 Client ID，所以由发布者或你自己申请：\n" +
-                                 "1. 在 Azure 门户注册应用（个人 Microsoft 账户，允许公共客户端流）\n" +
-                                 "2. 在 Mojang 的申请表提交 Client ID，等待审核通过\n" +
-                                 "3. 把 Client ID 填到 设置 → 账户\n\n详细步骤见项目文档 docs/微软登录.md。"),
+                    Dialogs.Text("微软正版登录需要一个已经通过 Mojang 审核的 Azure 应用 Client ID。\n\n" +
+                             "官方发行版的 exe 已经内置了一个，所以你通常不会看到这个提示 ——\n" +
+                             "看到它就说明这是个自己从源码编译的版本，需要自己申请：\n" +
+                             "1. 在 Azure 门户注册应用（个人 Microsoft 账户，允许公共客户端流）\n" +
+                             "2. 到 Mojang 的申请表 https://aka.ms/mce-reviewappid 提交这个 Client ID\n" +
+                             "3. 审核通过后填到 设置 → 账户；构建时也可以用 -MsClientId 或 clientid.txt 注入"),
                     new[] { "取消", "去设置" }, primary: 1, width: 520);
                 if (go == 1) { MainWindow.Current.GoTab("settings"); MainWindow.Current.SettingsPage.ScrollTo("account"); }
                 return;

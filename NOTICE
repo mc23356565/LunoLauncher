@@ -56,6 +56,19 @@ application ("第三方组件与许可") and are also kept under src/LunoLaunche
     Unmodified: this license forbids modifying the DLL
 
 
+Bundled Microsoft application (Client ID)
+-----------------------------------------
+
+Official binaries are built with the maintainer's own Azure application, which has been
+approved by Mojang for the Minecraft API. The Client ID is NOT part of this source code:
+it is injected at build time (see README). Building this project from source therefore
+produces a launcher with no Client ID, which cannot sign anyone in until you register and
+get your own application approved at https://aka.ms/mce-reviewappid.
+
+The embedded application is granted for use by this launcher only. Do not extract it and
+reuse it in another program: it is a public-client identifier, so it cannot be kept secret,
+and any abuse is attributed to the registered application rather than to whoever used it.
+
 Trademarks and affiliation
 --------------------------
 
