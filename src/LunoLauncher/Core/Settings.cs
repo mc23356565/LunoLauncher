@@ -32,6 +32,7 @@ namespace LunoLauncher.Core
             {
                 if (File.Exists(Paths.Config)) _root = JNode.ParseFile(Paths.Config);
                 if (!_root.IsObj) _root = JNode.Obj();
+                ScrubBuiltInClientId();
             }
             catch (Exception ex)
             {
@@ -39,6 +40,24 @@ namespace LunoLauncher.Core
                 try { File.Copy(Paths.Config, Paths.Config + ".broken", true); } catch { }
                 _root = JNode.Obj();
             }
+        }
+
+        /// <summary>
+        /// 早期版本会把内置的 Client ID 明文存进配置。启动时发现就删掉，别再留在磁盘上。
+        /// </summary>
+        static void ScrubBuiltInClientId()
+        {
+            try
+            {
+                var v = _root["account.msClientId"].Str;
+                if (!string.IsNullOrWhiteSpace(v) &&
+                    string.Equals(v.Trim(), Branding.DefaultMicrosoftClientId, StringComparison.OrdinalIgnoreCase))
+                {
+                    _root.Set("account.msClientId", null);
+                    Log.Warn("配置里存着内置的 Client ID，已删除（它不是密钥，但没有理由留在磁盘上）");
+                }
+            }
+            catch { }
         }
 
         public static void SaveNow()
