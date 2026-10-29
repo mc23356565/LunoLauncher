@@ -157,9 +157,9 @@
                 <Border x:Name="SecAccount" Style="{StaticResource CardBox}">
                     <StackPanel>
                         <TextBlock Text="账户与 API" Style="{StaticResource H2}"/>
-                        <TextBlock Text="微软登录 Client ID（留空 = 使用内置的已审核应用）" Style="{StaticResource Sub}"/>
-                        <TextBox x:Name="MsClientId" Margin="0,4,0,4" Tag="留空即使用内置的 Client ID" LostFocus="Any_Changed"/>
-                        <TextBlock Style="{StaticResource Sub}" Margin="0,0,0,10" Text="一般不用填：官方发行版已经内置一个通过审核的 Client ID。只有想换用你自己的 Azure 应用时才需要填，填了会覆盖内置值。登录走微软官方设备代码流程，令牌只保存在本机。"/>
+                        <TextBlock Text="微软登录 Client ID（留空 = 使用内置的已审核应用，内置值不会显示）" Style="{StaticResource Sub}"/>
+                        <TextBox x:Name="MsClientId" Margin="0,4,0,4" Tag="留空即使用内置的 Client ID（不显示具体值）" LostFocus="Any_Changed"/>
+                        <TextBlock Style="{StaticResource Sub}" Margin="0,0,0,10" Text="一般不用填：官方发行版已经内置一个通过审核的 Client ID，为安全起见不在界面上显示、也不会写进配置文件。只有想换用你自己的 Azure 应用时才需要填，填了会覆盖内置值。登录走微软官方设备代码流程，令牌只保存在本机。"/>
                         <TextBlock Text="CurseForge API Key（可选）" Style="{StaticResource Sub}"/>
                         <TextBox x:Name="CfKey" Margin="0,4,0,4" Tag="留空则通过 MCIM 镜像访问 CurseForge" LostFocus="Any_Changed"/>
                         <TextBlock Style="{StaticResource Sub}" Text="在 console.curseforge.com 免费申请。填了以后官方源可用，镜像挂了也能搜 CurseForge。"/>

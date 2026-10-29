@@ -101,7 +101,8 @@ namespace LunoLauncher.UI.Pages
             SpeedLimit.Text = Settings.SpeedLimitKb.ToString();
             LoadMirrors();
 
-            MsClientId.Text = Settings.MicrosoftClientId;
+            // 只显示用户自己填的；内置的不显示
+            MsClientId.Text = Settings.MicrosoftClientIdOverride;
             CfKey.Text = Settings.CurseForgeApiKey;
             ThemeHex.Text = Settings.ThemeColor;
             DarkModeBox.IsChecked = Theme.Dark;
@@ -154,7 +155,7 @@ namespace LunoLauncher.UI.Pages
             Settings.GameSource = (SourceMode)int.Parse(TagOf(GameSource));
             Settings.ModSource = (SourceMode)int.Parse(TagOf(ModSource));
             if (int.TryParse(SpeedLimit.Text, out var lim) && lim >= 0) Settings.SpeedLimitKb = lim;
-            Settings.MicrosoftClientId = MsClientId.Text.Trim();
+            Settings.MicrosoftClientIdOverride = MsClientId.Text.Trim();
             Settings.CurseForgeApiKey = CfKey.Text.Trim();
             Settings.AutoCheckUpdate = AutoUpdate.IsChecked == true;
             Settings.SetList("update.sources", UpdateSources.Text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).Where(s => s.StartsWith("http")));

@@ -10,7 +10,7 @@
     <RootNamespace>LunoLauncher</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
-    <Version>0.4.0</Version>
+    <Version>0.4.1</Version>
     <Product>LunoLauncher</Product>
     <Description>轻量的 Minecraft 启动器（OpenLauncher 分支）</Description>
     <Copyright>LunoLauncher contributors. Based on OpenLauncher, GPL-3.0.</Copyright>

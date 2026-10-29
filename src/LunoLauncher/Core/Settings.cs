@@ -75,7 +75,38 @@ namespace LunoLauncher.Core
         /// <summary>modrinth / curseforge</summary>
         public static string PreferredContentSource { get => Get("content.source", "modrinth"); set => Set("content.source", value); }
         public static string CurseForgeApiKey { get => Get("content.cfApiKey", Branding.DefaultCurseForgeApiKey); set => Set("content.cfApiKey", value); }
-        public static string MicrosoftClientId { get => Get("account.msClientId", Branding.DefaultMicrosoftClientId); set => Set("account.msClientId", value); }
+        /// <summary>
+        /// 用户自己填的 Client ID；没填过就是空。**内置的不算在内**，避免它出现在界面上或被写进配置。
+        /// </summary>
+        public static string MicrosoftClientIdOverride
+        {
+            get
+            {
+                var v = Get("account.msClientId");
+                // 老版本可能把内置值存进过配置：识别出来，当成没填
+                if (!string.IsNullOrWhiteSpace(v) &&
+                    string.Equals(v.Trim(), Branding.DefaultMicrosoftClientId, StringComparison.OrdinalIgnoreCase))
+                    return "";
+                return v ?? "";
+            }
+            set => Set("account.msClientId", value ?? "");
+        }
+
+        /// <summary>实际使用的 Client ID：用户填的优先，否则用内置的。</summary>
+        public static string MicrosoftClientId
+        {
+            get
+            {
+                var v = MicrosoftClientIdOverride;
+                return string.IsNullOrWhiteSpace(v) ? Branding.DefaultMicrosoftClientId : v;
+            }
+            set => Set("account.msClientId", value ?? "");
+        }
+
+        /// <summary>当前用的是不是内置的 Client ID。</summary>
+        public static bool UsesBuiltInMicrosoftClientId =>
+            string.IsNullOrWhiteSpace(MicrosoftClientIdOverride) &&
+            !string.IsNullOrWhiteSpace(Branding.DefaultMicrosoftClientId);
         public static string SelectedAccount { get => Get("account.selected"); set => Set("account.selected", value); }
 
         public static string JavaPath { get => Get("launch.java"); set => Set("launch.java", value); }
