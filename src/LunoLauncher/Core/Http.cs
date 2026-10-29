@@ -81,7 +81,7 @@ namespace LunoLauncher.Core
         /// </summary>
         public static async Task<string> UploadFileAsync(string url, byte[] file, string fileName, string contentType,
             IDictionary<string, string> fields, IDictionary<string, string> headers,
-            CancellationToken ct = default, int timeoutSec = 60)
+            CancellationToken ct = default, int timeoutSec = 60, string method = "POST")
         {
             var form = new MultipartFormDataContent();
             try
@@ -92,7 +92,7 @@ namespace LunoLauncher.Core
                 var content = new ByteArrayContent(file ?? new byte[0]);
                 content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType ?? "application/octet-stream");
                 form.Add(content, "file", fileName ?? "file");
-                var req = Build(new HttpMethod("PUT"), url, headers, form);
+                var req = Build(new HttpMethod(string.IsNullOrEmpty(method) ? "POST" : method), url, headers, form);
                 return await SendOnce(req, ct, timeoutSec).ConfigureAwait(false);
             }
             finally { form.Dispose(); }

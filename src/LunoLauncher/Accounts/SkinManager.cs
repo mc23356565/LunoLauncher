@@ -82,7 +82,15 @@ namespace LunoLauncher.Accounts
             var token = await TokenAsync(acc, ct).ConfigureAwait(false);
             var headers = new Dictionary<string, string> { ["Authorization"] = "Bearer " + token };
             var fields = new Dictionary<string, string> { ["variant"] = model == SkinModel.Slim ? "slim" : "classic" };
-            await Http.UploadFileAsync(SkinsUrl, png, "skin.png", "image/png", fields, headers, ct, 90).ConfigureAwait(false);
+            try
+            {
+                // 官方接口是 POST；万一以后改回 PUT，这里兜住
+                await Http.UploadFileAsync(SkinsUrl, png, "skin.png", "image/png", fields, headers, ct, 90, "POST").ConfigureAwait(false);
+            }
+            catch (HttpStatusException ex) when (ex.Status == 405)
+            {
+                await Http.UploadFileAsync(SkinsUrl, png, "skin.png", "image/png", fields, headers, ct, 90, "PUT").ConfigureAwait(false);
+            }
             Skins.Invalidate(acc);
         }
 
@@ -91,7 +99,15 @@ namespace LunoLauncher.Accounts
         {
             var token = await TokenAsync(acc, ct).ConfigureAwait(false);
             var headers = new Dictionary<string, string> { ["Authorization"] = "Bearer " + token };
-            await Http.DeleteAsync(ResetUrl, headers, ct, 60).ConfigureAwait(false);
+            try
+            {
+                await Http.DeleteAsync(ResetUrl, headers, ct, 60).ConfigureAwait(false);
+            }
+            catch (HttpStatusException ex) when (ex.Status == 405)
+            {
+                // 老路径：DELETE /skins
+                await Http.DeleteAsync(SkinsUrl, headers, ct, 60).ConfigureAwait(false);
+            }
             Skins.Invalidate(acc);
         }
 
@@ -114,6 +130,7 @@ namespace LunoLauncher.Accounts
             {
                 if (hs.Status == 401) return "登录状态失效了，请在账号管理里重新登录微软账号。\n\n接口返回：" + hs.Body;
                 if (hs.Status == 403) return "这个账号没有换皮肤的权限（可能不是正版账号）。\n\n接口返回：" + hs.Body;
+                if (hs.Status == 405) return "接口不接受这个请求方法（405），可能是接口改版了，请反馈给作者。";
                 if (hs.Status == 429) return "请求太频繁了，等一会儿再试。";
                 return "接口返回 " + hs.Status + "：\n\n" + hs.Body;
             }
