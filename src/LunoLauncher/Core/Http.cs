@@ -76,6 +76,35 @@ namespace LunoLauncher.Core
             }
         }
 
+        /// <summary>
+        /// multipart/form-data 上传（上传皮肤用）。非 2xx 会抛 HttpStatusException，body 里带着接口的错误说明。
+        /// </summary>
+        public static async Task<string> UploadFileAsync(string url, byte[] file, string fileName, string contentType,
+            IDictionary<string, string> fields, IDictionary<string, string> headers,
+            CancellationToken ct = default, int timeoutSec = 60)
+        {
+            var form = new MultipartFormDataContent();
+            try
+            {
+                if (fields != null)
+                    foreach (var kv in fields)
+                        form.Add(new StringContent(kv.Value ?? "", Encoding.UTF8), kv.Key);
+                var content = new ByteArrayContent(file ?? new byte[0]);
+                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType ?? "application/octet-stream");
+                form.Add(content, "file", fileName ?? "file");
+                var req = Build(new HttpMethod("PUT"), url, headers, form);
+                return await SendOnce(req, ct, timeoutSec).ConfigureAwait(false);
+            }
+            finally { form.Dispose(); }
+        }
+
+        public static async Task<string> DeleteAsync(string url, IDictionary<string, string> headers,
+            CancellationToken ct = default, int timeoutSec = 60)
+        {
+            var req = Build(HttpMethod.Delete, url, headers);
+            return await SendOnce(req, ct, timeoutSec).ConfigureAwait(false);
+        }
+
         /// <summary>多个来源错峰竞速：前一个 2.5 秒没回应就同时请求下一个，谁先成功用谁</summary>
         const int StaggerMs = 2500;
 

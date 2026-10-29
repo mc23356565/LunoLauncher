@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,12 +60,14 @@ namespace LunoLauncher.UI
                     if ((list.SelectedItem as Grid)?.Tag is Account sel) AccountStore.Selected = sel;
                 };
 
-                panel.Children.Add(new TextBlock { Text = "添加账号", Style = S("Sub"), Margin = new Thickness(0, 12, 0, 6) });
-
                 // 按 Branding.AllowOfflineAccount 决定按钮组合：发行版默认不出现「离线」
                 var labels = new System.Collections.Generic.List<string> { "完成" };
                 var actions = new System.Collections.Generic.List<string> { "done" };
                 if (Branding.AllowOfflineAccount) { labels.Add("离线"); actions.Add("offline"); }
+                if (AccountStore.All.Any(x => x.Type == AccountType.Microsoft))
+                {
+                    labels.Add("皮肤"); actions.Add("skin");
+                }
                 labels.Add("微软正版"); actions.Add("ms");
                 if (Branding.AllowThirdPartyLogin) { labels.Add("外置登录"); actions.Add("ygg"); }
 
@@ -74,6 +77,7 @@ namespace LunoLauncher.UI
                 {
                     case "offline": await AddOfflineAsync(); break;
                     case "ms": await AddMicrosoftAsync(); break;
+                    case "skin": await SkinAsync(); break;
                     case "ygg": await AddYggdrasilAsync(); break;
                     default: return;
                 }
@@ -194,6 +198,128 @@ namespace LunoLauncher.UI
                 Dialogs.Toast($"已登录 {acc.Name}（{acc.TypeText}）", MainWindow.ToastKind.Ok);
             }
             catch (Exception ex) { await Dialogs.Alert("外置登录失败", ex.Message); }
+        }
+
+        // ---------- 换皮肤 ----------
+
+        static async Task SkinAsync()
+        {
+            var acc = AccountStore.Selected;
+            if (acc == null || acc.Type != AccountType.Microsoft)
+                acc = AccountStore.All.FirstOrDefault(a => a.Type == AccountType.Microsoft);
+            if (acc == null)
+            {
+                await Dialogs.Alert("先添加微软账号", "换皮肤需要微软正版账号。");
+                return;
+            }
+            await SkinDialogAsync(acc);
+        }
+
+        static async Task SkinDialogAsync(Account acc)
+        {
+            var panel = new StackPanel();
+            var img = new Image
+            {
+                Width = 176,
+                Height = 176,
+                Stretch = Stretch.Uniform,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 8),
+            };
+            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.NearestNeighbor);
+            panel.Children.Add(img);
+
+            var status = new TextBlock { Style = S("Sub"), HorizontalAlignment = HorizontalAlignment.Center, Text = "正在读取当前皮肤…" };
+            panel.Children.Add(status);
+            panel.Children.Add(new TextBlock
+            {
+                Style = S("Sub"),
+                Margin = new Thickness(0, 10, 0, 0),
+                TextWrapping = TextWrapping.Wrap,
+                Text = "皮肤图片必须是 64×64（新版，可细手臂）或 64×32（旧版）的 PNG。上传后一般几秒到一分钟在游戏里生效。" +
+                       "\n披风换不了：没有公开接口，只有 Mojang 发放的披风会显示。",
+            });
+
+            var dlg = Dialogs.ShowAsync("换皮肤 · " + acc.Name, panel, new[] { "关闭", "选择图片上传", "恢复默认" }, primary: 1, width: 460);
+            _ = LoadCurrentSkinAsync(acc, img, status);
+            var r = await dlg;
+            if (r == 1) await UploadSkinAsync(acc);
+            else if (r == 2) await ResetSkinAsync(acc);
+        }
+
+        static async Task LoadCurrentSkinAsync(Account acc, Image img, TextBlock status)
+        {
+            byte[] png = null;
+            try { png = await Skins.GetSkinPngAsync(acc); } catch { }
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                if (png == null) { status.Text = "没读到当前皮肤（网络问题，不影响上传）"; return; }
+                img.Source = SkinManager.Decode(png);
+                SkinManager.Validate(png, out var w, out var h);
+                status.Text = "当前皮肤 " + w + "×" + h +
+                              (SkinManager.DetectModel(png) == SkinModel.Slim ? " · 细手臂" : "");
+            });
+        }
+
+        static async Task UploadSkinAsync(Account acc)
+        {
+            var f = Pickers.PickFile("选择皮肤图片", "PNG 图片|*.png|所有文件|*.*");
+            if (f == null) return;
+
+            byte[] png;
+            try { png = File.ReadAllBytes(f); }
+            catch (Exception ex) { await Dialogs.Alert("读不了这个文件", ex.Message); return; }
+
+            var err = SkinManager.Validate(png, out var w, out var h);
+            if (err != null) { await Dialogs.Alert("这张图不能用作皮肤", err); return; }
+
+            var panel = new StackPanel();
+            var img = new Image
+            {
+                Width = 150,
+                Height = 150,
+                Stretch = Stretch.Uniform,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 8),
+            };
+            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.NearestNeighbor);
+            img.Source = SkinManager.Decode(png);
+            panel.Children.Add(img);
+            panel.Children.Add(new TextBlock
+            {
+                Text = "尺寸 " + w + "×" + h + " · " + Path.GetFileName(f),
+                Style = S("Sub"),
+                HorizontalAlignment = HorizontalAlignment.Center,
+            });
+            var slim = new CheckBox
+            {
+                Style = S("Switch"),
+                Content = "细手臂（Slim / Alex 模型）",
+                IsChecked = SkinManager.DetectModel(png) == SkinModel.Slim,
+                Margin = new Thickness(0, 12, 0, 0),
+            };
+            panel.Children.Add(slim);
+
+            if (await Dialogs.ShowAsync("确认上传皮肤", panel, new[] { "取消", "上传" }, primary: 1, width: 420) != 1) return;
+
+            try
+            {
+                Dialogs.Toast("正在上传皮肤…");
+                await SkinManager.UploadAsync(acc, png, slim.IsChecked == true ? SkinModel.Slim : SkinModel.Classic);
+                Dialogs.Toast("皮肤已更新，游戏内可能要等几十秒", MainWindow.ToastKind.Ok);
+            }
+            catch (Exception ex) { await Dialogs.Alert("上传失败", SkinManager.Explain(ex)); }
+        }
+
+        static async Task ResetSkinAsync(Account acc)
+        {
+            if (!await Dialogs.Confirm("恢复默认皮肤", "把皮肤恢复成默认（Steve / Alex）？", "恢复")) return;
+            try
+            {
+                await SkinManager.ResetAsync(acc);
+                Dialogs.Toast("已恢复默认皮肤", MainWindow.ToastKind.Ok);
+            }
+            catch (Exception ex) { await Dialogs.Alert("恢复失败", SkinManager.Explain(ex)); }
         }
 
         static void CloseTop()

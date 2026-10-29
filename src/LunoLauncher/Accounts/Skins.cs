@@ -55,6 +55,14 @@ namespace LunoLauncher.Accounts
             }
         }
 
+        /// <summary>拿当前皮肤的原始 PNG（换皮肤界面预览用）；拿不到返回 null。</summary>
+        public static async Task<byte[]> GetSkinPngAsync(Account acc)
+        {
+            if (acc == null || acc.Type == AccountType.Offline || string.IsNullOrEmpty(acc.Uuid)) return null;
+            try { return await LoadSkinBytesAsync(acc, AccountKey(acc)).ConfigureAwait(false); }
+            catch { return null; }
+        }
+
         /// <summary>丢掉内存里的头像缓存（换皮肤后调用）</summary>
         public static void Invalidate(Account acc = null)
         {
