@@ -53,3 +53,7 @@ obj_*.o
 
 /_selftest/
 /_cubiomes/
+
+# 与启动器无关的本地工具 / 截图（只在自己机器上留，不进仓库）
+/tools/shot.ps1
+/docs/shot-*.png
