@@ -6,17 +6,26 @@ using System.Runtime.InteropServices;
 namespace LunoLauncher.Core
 {
     /// <summary>
-    /// cubiomes 原生库的调用层（x64 的 cubiomes.dll，放在 exe 旁边）。
+    /// cubiomes 原生库的调用层（x64 的 cubiomes.dll）。
     ///
     /// 这个 C 库负责真正的世界生成算法 —— 生物群系、结构位置、要塞，
     /// 和 cubiomes-viewer 用的是同一个库。启动器自己只做界面和缓存。
     ///
-    /// DLL 缺失或加载失败时 <see cref="Available"/> 为 false，
+    /// DLL 是**内嵌在 exe 里**的（单文件发布）：第一次用到时把它解压到
+    /// %LOCALAPPDATA%\LunoLauncher\native\&lt;内容哈希&gt;\cubiomes.dll，再用 LoadLibrary
+    /// 按完整路径加载一次；之后 DllImport("cubiomes.dll") 会命中进程里已加载的同名模块。
+    /// 如果 exe 旁边正好也有一份，就优先用那份（本地调试 / 手动替换）。
+    ///
+    /// 加载失败时 <see cref="Available"/> 为 false，
     /// 调用方要据此把功能标成「不可用」，而不是崩掉。
     /// </summary>
     public static class Cubiomes
     {
         const string Dll = "cubiomes.dll";
+        const string ResName = "Luno.Native.cubiomes.dll";
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        static extern IntPtr LoadLibraryW(string path);
 
         static bool _tried;
         static bool _available;
@@ -34,30 +43,104 @@ namespace LunoLauncher.Core
         /// <summary>加载失败的原因，给界面显示用</summary>
         public static string LastError { get; private set; }
 
+        /// <summary>实际用的 dll 路径（日志 / 诊断用）</summary>
+        public static string LibraryPath { get; private set; }
+
         static void Init()
         {
             _tried = true;
             try
             {
-                var path = Path.Combine(Paths.ExeDir, Dll);
-                if (!File.Exists(path))
+                string path = EnsureNativeFile();
+                if (path == null)
                 {
-                    LastError = "缺少 cubiomes.dll（应该和启动器放在同一个文件夹）";
                     Log.Warn("种子查询：" + LastError);
                     return;
                 }
+                LibraryPath = path;
+
+                // 先按完整路径加载：DllImport("cubiomes.dll") 之后会按模块名找到它
+                IntPtr handle = LoadLibraryW(path);
+                if (handle == IntPtr.Zero)
+                {
+                    int err = Marshal.GetLastWin32Error();
+                    LastError = "cubiomes.dll 加载失败（Win32 错误 " + err + "，可能是 32/64 位不匹配或缺 VC 运行时）";
+                    Log.Error("加载 " + path + " 失败，Win32 错误 " + err);
+                    return;
+                }
+
                 var newest = Native.McNewest();
                 _available = newest > 0;
-                if (_available) Log.Info($"cubiomes 已加载，支持的最新版本编号 {newest}");
+                if (_available) Log.Info($"cubiomes 已加载（{path}），支持的最新版本编号 {newest}");
                 else LastError = "cubiomes.dll 加载后没有返回版本信息";
             }
             catch (Exception ex)
             {
-                // 常见原因：用了 32 位的 dll，或者缺 VC 运行时
-                LastError = "cubiomes.dll 加载失败：" + ex.Message;
-                Log.Error("加载 cubiomes.dll 失败", ex);
+                // 常见原因：缓存目录不可写、内嵌资源缺失、缺 VC 运行时
+                LastError = "cubiomes 初始化失败：" + ex.Message;
+                Log.Error("初始化 cubiomes 失败", ex);
                 _available = false;
             }
+        }
+
+        /// <summary>
+        /// 拿到一份可加载的 dll 文件：exe 旁边有就用它，否则把内嵌的那份解压到本地缓存。
+        /// 缓存路径带内容哈希，升级启动器后不会用到旧 dll。
+        /// </summary>
+        static string EnsureNativeFile()
+        {
+            var beside = Path.Combine(Paths.ExeDir, Dll);
+            if (File.Exists(beside)) return beside;
+
+            using (var stream = typeof(Cubiomes).Assembly.GetManifestResourceStream(ResName))
+            {
+                if (stream == null)
+                {
+                    LastError = "程序里没有内置 cubiomes 原生库，种子查询用不了";
+                    return null;
+                }
+
+                var bytes = new byte[stream.Length];
+                int read = 0;
+                while (read < bytes.Length)
+                {
+                    int n = stream.Read(bytes, read, bytes.Length - read);
+                    if (n <= 0) break;
+                    read += n;
+                }
+
+                string hash = Util.Sha256(bytes).Substring(0, 16);
+                string dir = Path.Combine(LocalDir(), "native", hash);
+                Directory.CreateDirectory(dir);
+                string file = Path.Combine(dir, Dll);
+
+                if (!File.Exists(file) || new FileInfo(file).Length != bytes.Length)
+                {
+                    // 先写临时文件再改名：并发启动时不会读到写了一半的 dll
+                    string tmp = file + "." + Guid.NewGuid().ToString("N").Substring(0, 8) + ".tmp";
+                    File.WriteAllBytes(tmp, bytes);
+                    if (File.Exists(file)) File.Delete(file);
+                    File.Move(tmp, file);
+                    Log.Info("已把内置 cubiomes 解压到 " + file);
+                }
+                return file;
+            }
+        }
+
+        /// <summary>本机可写目录（%LOCALAPPDATA%\LunoLauncher；拿不到就退回临时目录）</summary>
+        static string LocalDir()
+        {
+            try
+            {
+                var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Branding.AppName);
+                if (!string.IsNullOrEmpty(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                    return dir;
+                }
+            }
+            catch { }
+            return Path.GetTempPath();
         }
 
         /// <summary>库内置的最新版本编号（对应 biomes.h 的 MC_NEWEST）</summary>

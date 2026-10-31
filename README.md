@@ -128,8 +128,9 @@ Minecraft is a trademark of Mojang Synergies AB.
 
 从 https://mc23356565.github.io/LunoLauncher/ 下载 `LunoLauncher.exe`，放进一个空文件夹双击即可
 （Windows 10 / 11 自带 .NET Framework 4.8，无需安装任何东西）。
+**就一个 exe**：联机用的 EasyTier（约 13 MB）和种子查询用的 cubiomes 原生库都已经内嵌在里面，
+第一次用到的功能会自己解压到本机缓存（`LunoLauncher\tunnel\bin`、`%LOCALAPPDATA%\LunoLauncher\native`），不需要额外的 dll。
 游戏文件默认放在 exe 旁边的 `.minecraft`，启动器配置在 `LunoLauncher` 文件夹里——整个文件夹拷走就能在别的电脑上用。
-联机用的 EasyTier 已经打包在 exe 里（约 13 MB），第一次点「联机」时自动解压到 `LunoLauncher\tunnel\bin`，不需要另外下载。
 
 也可以在 **版本选择 → 添加已有的游戏目录** 里直接使用官方启动器、PCL、HMCL 的 `.minecraft`。
 

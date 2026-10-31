@@ -331,7 +331,7 @@ namespace LunoLauncher.UI.Pages
             CloseStructInfo();
             SeedHint.Text = Cubiomes.Available
                 ? $"{VersionName(mcVer)}：cubiomes 里没有这个版本的生成器，暂时不支持（换一个版本试试）"
-                : "找不到 cubiomes.dll，种子查询用不了（它必须和 exe 放在一起）。";
+                : "种子查询用不了：" + (Cubiomes.LastError ?? "cubiomes 原生库加载失败");
         }
 
         MapRender BuildMap(long seed, int mcVer, int dim, int y, int viewX, int viewZ, double zoom,
@@ -460,7 +460,7 @@ namespace LunoLauncher.UI.Pages
             var bmp = BitmapSource.Create(bmpW, bmpH, 96, 96, PixelFormats.Bgra32, null, px, bmpW * 4);
             bmp.Freeze();
 
-            string mode = biomes ? (allBiomes ? "没有勾选群系" : $"已勾选 {visible.Count} 个群系") : "缺 cubiomes.dll";
+            string mode = biomes ? (allBiomes ? "没有勾选群系" : $"已勾选 {visible.Count} 个群系") : "cubiomes 未加载";
             string dimText = DimName(dim) + (dim == 0 && mcVer >= 22 ? " · " + LayerName(y) : "");
             string range = VersionRange(mcVer);
             string verText = VersionName(mcVer) + (string.IsNullOrEmpty(range) || range == VersionName(mcVer) ? "" : $"（{range}）");
