@@ -86,10 +86,26 @@ namespace LunoLauncher.Core
             catch (Exception ex) { Log.Warn("打开文件夹失败: " + ex.Message); }
         }
 
-        public static void OpenUrl(string url)
+        /// <summary>
+        /// 用默认浏览器打开网址。返回 false 表示这一步就没成功。
+        /// 只用最标准的 ShellExecute（和系统里其它程序一样）：
+        /// 不要绕 explorer.exe 或 msedge.exe 之类的中间人，那些做法会让浏览器
+        /// 以为请求来自另一个权限级别的进程，反而弹「现有实例正在以提升的权限运行」。
+        /// </summary>
+        public static bool OpenUrl(string url)
         {
-            try { Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }); }
-            catch (Exception ex) { Log.Warn("打开网址失败: " + ex.Message); }
+            if (string.IsNullOrWhiteSpace(url)) return false;
+            try
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                Log.Info("打开网址：" + url);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Warn($"打开网址失败（{url}）：{ex.Message}");
+                return false;
+            }
         }
 
         /// <summary>解压 zip 中以 prefix 开头的条目到 dest（去掉 prefix）。防 zip-slip。</summary>

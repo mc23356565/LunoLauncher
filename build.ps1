@@ -1,4 +1,4 @@
-﻿# Build the release exe -> dist\LunoLauncher.exe
+# Build the release exe -> dist\LunoLauncher.exe
 # (single file; .NET Framework 4.8 ships with Windows 10/11, nothing to install)
 #
 # Needs .NET SDK 8 or newer (https://dotnet.microsoft.com/download). No Visual Studio.
@@ -39,6 +39,10 @@ try {
     Copy-Item "$root\src\LunoLauncher\bin\Release\LunoLauncher.exe" $dist -Force
     # The long-path switch is set in code at startup; the .config file is optional.
     Copy-Item "$root\src\LunoLauncher\bin\Release\LunoLauncher.exe.config" $dist -Force
+    # 种子查询用的原生库，必须和 exe 放在同一个文件夹
+    if (Test-Path "$root\src\LunoLauncher\bin\Release\cubiomes.dll") {
+        Copy-Item "$root\src\LunoLauncher\bin\Release\cubiomes.dll" $dist -Force
+    }
 } catch {
     throw "Cannot write to dist - is LunoLauncher still running? Close it and retry. $($_.Exception.Message)"
 }

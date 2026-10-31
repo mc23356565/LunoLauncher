@@ -37,6 +37,7 @@
                     <RadioButton x:Name="NavLaunch" GroupName="nav" Style="{StaticResource TopNav}" Tag="&#xE768;" Content="启动" Checked="Nav_Checked"/>
                     <RadioButton x:Name="NavDownload" GroupName="nav" Style="{StaticResource TopNav}" Tag="&#xE896;" Content="下载" Checked="Nav_Checked"/>
                     <RadioButton x:Name="NavCoop" GroupName="nav" Style="{StaticResource TopNav}" Tag="&#xE716;" Content="联机" Checked="Nav_Checked"/>
+                    <RadioButton x:Name="NavToolbox" GroupName="nav" Style="{StaticResource TopNav}" Tag="&#xE90F;" Content="工具" Checked="Nav_Checked"/>
                     <RadioButton x:Name="NavSettings" GroupName="nav" Style="{StaticResource TopNav}" Tag="&#xE713;" Content="设置" Checked="Nav_Checked"/>
                     <RadioButton x:Name="NavMore" GroupName="nav" Style="{StaticResource TopNav}" Tag="&#xE712;" Content="更多" Checked="Nav_Checked"/>
                 </StackPanel>

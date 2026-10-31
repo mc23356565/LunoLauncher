@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -10,7 +10,7 @@
     <RootNamespace>LunoLauncher</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
-    <Version>0.5.0</Version>
+    <Version>0.6.0</Version>
     <Product>LunoLauncher</Product>
     <Description>轻量的 Minecraft 启动器（OpenLauncher 分支）</Description>
     <Copyright>LunoLauncher contributors. Based on OpenLauncher, GPL-3.0.</Copyright>
@@ -37,7 +37,14 @@
 
   <ItemGroup>
     <Resource Include="Assets\icon.png" />
+    <!-- 结构标记图标：cubiomes-viewer 的同款 PNG（GPL-3.0，来源与版权见 NOTICE） -->
+    <Resource Include="Assets\structure-icons\*.png" />
     <EmbeddedResource Include="Assets\zh-names.json" LogicalName="zh-names.json" />
+    <!-- 种子查询用的原生库（cubiomes，x64，MIT）。单文件发布下它只能放在 exe 旁边。 -->
+    <None Include="lib\cubiomes.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>cubiomes.dll</Link>
+    </None>
   </ItemGroup>
 
   <!-- 联机：内置 EasyTier（官方 Release 的 Windows x64 包，原样打包，见 Assets\licenses） -->

@@ -1,3 +1,4 @@
+# 构建产物
 bin/
 obj/
 /dist/
@@ -5,28 +6,17 @@ obj/
 *.user
 *.suo
 
+# 其它启动器 / 本地游戏目录（不要进仓库）
 /DawnLauncher/
 /LunoLauncher/
 /OpenLauncher/
 /.minecraft/
 
-# 本地研究资料（含 Mojang 条款原文与历次申请记录，不公开）
+# 本地研究资料（含 Mojang 条款原文与历史申请记录，不公开）
+/说明文件 禁止上传github/
 /文本参考说明.txt
 /AppID申请表单.md
 /说明.txt
-
-private-key.xml
-*.private.xml
-
-# EasyTier 运行文件（第三方二进制，不进仓库）
-/easytier/
-/easytier-windows-x86_64/
-/EasyTier-main/
-
-# 本地构建临时目录
-/.dotnet-home/
-/.nuget/
-# 内部资料（申请记录、条款摘录、路线图）
 /功能对照与路线图.md
 /联机.md
 /微软登录.md
@@ -34,3 +24,32 @@ private-key.xml
 
 # 微软登录的 Client ID（不进仓库；构建时由 -p:MsClientId 或 CI secret 注入）
 /clientid.txt
+
+private-key.xml
+*.private.xml
+
+# 任何地方放着的 token / 密钥文件都别进仓库
+*token*.txt
+*-token.*
+*.token
+.secrets
+/secrets/
+
+# EasyTier 运行文件（第三方二进制，不进仓库）
+/easytier/
+/easytier-windows-x86_64/
+/EasyTier-main/
+
+# 本地构建临时目录 / 目标文件
+/.dotnet-home/
+/.nuget/
+obj_*.o
+
+# cubiomes 源码树：由 tools/cubiomes/build-cubiomes.ps1 现场 clone，不进仓库
+/tools/cubiomes/build/
+
+# 发版用的临时产物（zip / 校验和）
+/.release/
+
+/_selftest/
+/_cubiomes/

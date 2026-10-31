@@ -1,0 +1,356 @@
+<UserControl x:Class="LunoLauncher.UI.Pages.ToolboxPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <!-- 站点图标都画在 24x24 的格子里：先试网站自己的 favicon，抓不到就用这些 -->
+        <PathGeometry x:Key="geoWiki" FillRule="EvenOdd"
+                      Figures="M3,6.5 L10.5,5.2 V19 L3,20.2 Z M21,6.5 L13.5,5.2 V19 L21,20.2 Z"/>
+        <PathGeometry x:Key="geoLog" FillRule="EvenOdd"
+                      Figures="M6,2.5 H14 L19,7.5 V21.5 H6 Z M7.8,4.3 V19.7 H17.2 V8.6 L13.4,4.3 Z
+                               M9.2,11 H15.6 V12.4 H9.2 Z M9.2,14 H15.6 V15.4 H9.2 Z M9.2,17 H13.6 V18.4 H9.2 Z"/>
+        <PathGeometry x:Key="geoWall" FillRule="EvenOdd"
+                      Figures="M3,4.5 H21 V19.5 H3 Z M5,6.5 V17.5 H19 V6.5 Z
+                               M7.5,16.5 L11,10.5 L14.5,16.5 Z M14.6,8.6 H16.8 V10.8 H14.6 Z"/>
+        <PathGeometry x:Key="geoServer" FillRule="EvenOdd"
+                      Figures="M4,5 H20 V10.5 H4 Z M5.8,6.8 V8.7 H18.2 V6.8 Z M15.6,7.2 H17.2 V8.3 H15.6 Z
+                               M4,13.5 H20 V19 H4 Z M5.8,15.3 V17.2 H18.2 V15.3 Z M15.6,15.7 H17.2 V16.8 H15.6 Z"/>
+        <PathGeometry x:Key="geoGif" FillRule="EvenOdd"
+                      Figures="M12,3 A9,9 0 1 0 12,21 A9,9 0 1 0 12,3 Z
+                               M12,5.4 A6.6,6.6 0 1 1 12,18.6 A6.6,6.6 0 1 1 12,5.4 Z
+                               M10.2,8.4 L16.4,12 L10.2,15.6 Z"/>
+        <PathGeometry x:Key="geoItem" FillRule="EvenOdd"
+                      Figures="M12,3.6 L19.4,7.5 L12,11.4 L4.6,7.5 Z
+                               M4.1,9 L11.2,12.7 V20.4 L4.1,16.7 Z
+                               M19.9,9 L12.8,12.7 V20.4 L19.9,16.7 Z"/>
+        <PathGeometry x:Key="geoPixel" FillRule="EvenOdd"
+                      Figures="M4,4 H10.8 V10.8 H4 Z M13.2,4 H20 V10.8 H13.2 Z
+                               M4,13.2 H10.8 V20 H4 Z M13.2,13.2 H20 V20 H13.2 Z"/>
+        <PathGeometry x:Key="geoHead" FillRule="EvenOdd"
+                      Figures="M4,5 H20 V19 H4 Z M6,7 V17 H18 V7 Z
+                               M9,9.5 H11.2 V11.7 H9 Z M12.8,9.5 H15 V11.7 H12.8 Z M9,13.6 H15 V15.2 H9 Z"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="190"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border Background="{DynamicResource Card}" BorderBrush="{DynamicResource Line}" BorderThickness="0,0,1,0">
+            <DockPanel Margin="12,18,12,14">
+                <StackPanel>
+                    <TextBlock Text="工具" Style="{StaticResource Sub}" Margin="12,0,0,6"/>
+                    <RadioButton x:Name="NavWeb" GroupName="tb" Style="{StaticResource SideNav}" Tag="&#xE774;" Content="实用网页" IsChecked="True" Checked="Nav_Checked"/>
+                    <RadioButton x:Name="NavSeed" GroupName="tb" Style="{StaticResource SideNav}" Tag="&#xE71E;" Content="种子查询" Checked="Nav_Checked"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Column="1">
+            <!-- 实用在线网页：一张整理好的入口清单，按钮把地址复制到剪贴板 -->
+            <DockPanel x:Name="WebPanel" Margin="22,18,22,14">
+                <Grid DockPanel.Dock="Top" Margin="0,0,0,6">
+                    <TextBlock Text="实用在线网页" Style="{StaticResource H1}" VerticalAlignment="Center"/>
+                    <TextBlock Style="{StaticResource Sub}" HorizontalAlignment="Right" VerticalAlignment="Center" Text="点「复制链接」再粘到浏览器里打开"/>
+                </Grid>
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource Body}" Margin="0,0,0,12"
+                           Text="社区里做得很好的几个小站，启动器只负责把它们整理到一起，不代理、不缓存、也不修改任何内容。"/>
+                <ListBox x:Name="WebList" Style="{StaticResource CardList}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Width="34" Height="34" CornerRadius="7" Background="{DynamicResource Card}"
+                                        BorderBrush="{DynamicResource Line}" BorderThickness="1" Margin="0,0,12,0">
+                                    <Grid Loaded="Icon_Loaded">
+                                        <Path Data="{Binding IconGeometry}" Fill="{Binding BadgeBrush}" Stretch="Uniform"
+                                              Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Image Stretch="Uniform" Margin="3"/>
+                                    </Grid>
+                                </Border>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14"/>
+                                    <TextBlock Style="{StaticResource Sub}">
+                                        <Run Text="{Binding Desc, Mode=OneWay}"/>
+                                        <Run Text="  ·  " Foreground="{DynamicResource Text3}"/>
+                                        <Run Text="{Binding Host, Mode=OneWay}" Foreground="{DynamicResource Accent}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                                <Button Grid.Column="2" Content="复制链接" Style="{StaticResource Primary}" Padding="16,6" Click="CopyLink_Click"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+
+            <!--
+                种子查询。界面结构照 cubiomes-viewer：
+                顶部工具条（种子 / 版本 / 维度 / 层）、右侧可折叠的群系与结构勾选面板、底部状态栏（坐标 · 群系 · 缩放）。
+            -->
+            <DockPanel x:Name="SeedPanel" Margin="22,18,22,14" Visibility="Collapsed">
+
+                <!-- 顶部工具条：窄窗口时自动折行 -->
+                <Border DockPanel.Dock="Top" Style="{StaticResource CardBox}" Padding="12,8" Margin="0,0,0,8">
+                    <WrapPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Margin="0,3,8,3">
+                            <TextBlock Text="种子" Style="{StaticResource Sub}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBox x:Name="SeedBox" Width="112" Tag="数字或文本" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,3,8,3">
+                            <TextBlock Text="版本" Style="{StaticResource Sub}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <!-- 名单来自 cubiomes.dll（Beta 1.7 → 26.3），按分组显示覆盖区间 -->
+                            <ComboBox x:Name="VersionBox" Width="170" VerticalAlignment="Center" SelectionChanged="Version_Changed">
+                                <ComboBox.ItemContainerStyle>
+                                    <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                                        <Setter Property="Focusable" Value="True"/>
+                                        <Style.Triggers>
+                                            <!-- 分组标题：不可选、不可聚焦 -->
+                                            <DataTrigger Binding="{Binding IsHeader}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                                <Setter Property="Focusable" Value="False"/>
+                                                <Setter Property="Padding" Value="10,7,10,1"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ComboBox.ItemContainerStyle>
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid MinWidth="150">
+                                            <TextBlock Text="{Binding HeaderText}" Visibility="{Binding HeaderVisibility}"
+                                                       FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Text3}"/>
+                                            <Grid Visibility="{Binding ItemVisibility}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Name}" FontSize="12.5"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Range}" FontSize="11"
+                                                           Visibility="{Binding RangeVisibility}"
+                                                           Foreground="{DynamicResource Text3}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,3,12,3">
+                            <TextBlock Text="维度" Style="{StaticResource Sub}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <ComboBox x:Name="DimBox" Width="82" VerticalAlignment="Center" SelectionChanged="Dim_Changed"/>
+                        </StackPanel>
+                        <!-- 层只有主世界 + 1.18 以上才有意义，别的版本整组隐藏 -->
+                        <StackPanel x:Name="LayerGroup" Orientation="Horizontal" Margin="0,3,12,3">
+                            <TextBlock Text="层" Style="{StaticResource Sub}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <ComboBox x:Name="LayerBox" Width="104" VerticalAlignment="Center" SelectionChanged="Layer_Changed"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,3,8,3">
+                            <TextBlock Text="玩家" Style="{StaticResource Sub}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBox x:Name="PlayerXBox" Width="78" Tag="X" VerticalAlignment="Center"/>
+                            <TextBox x:Name="PlayerZBox" Width="78" Tag="Z" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Button Content="计算" Style="{StaticResource Primary}" Padding="18,5" Margin="0,3,0,3"
+                                VerticalAlignment="Center" Click="SeedGo_Click"/>
+                    </WrapPanel>
+                </Border>
+
+                <TextBlock x:Name="SeedHint" DockPanel.Dock="Top" Style="{StaticResource Body}" Margin="2,0,2,8"
+                           Text="种子可以是数字或文本。左键拖动平移、滚轮缩放、单击选点。"/>
+
+                <!-- 底部状态栏：坐标 · 群系 · 缩放比例 -->
+                <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource Line}"
+                        Margin="0,8,0,0" Padding="2,8,0,0">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="&#xE707;" Style="{StaticResource Icon}" Foreground="{DynamicResource Danger}" Margin="0,1,8,0"/>
+                            <TextBlock x:Name="CoordText" Style="{StaticResource Body}" Text="玩家：0, 0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="ZoomText" Text="100%" Style="{StaticResource Sub}" VerticalAlignment="Center" Margin="14,0,0,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <CheckBox x:Name="SlimeToggle" Style="{StaticResource Switch}" Content="史莱姆区块"
+                                      IsChecked="True" Margin="0,0,12,0" Checked="RenderToggle_Changed" Unchecked="RenderToggle_Changed"/>
+                            <Button Content="&#x2013;" Style="{StaticResource BaseButton}" Padding="10,3" ToolTip="缩小（滚轮）" Click="ZoomOut_Click"/>
+                            <Button Content="+" Style="{StaticResource BaseButton}" Padding="10,3" ToolTip="放大（滚轮）" Click="ZoomIn_Click" Margin="6,0,12,0"/>
+                            <Button Content="结构查找" Style="{StaticResource BaseButton}" Padding="13,4" Margin="0,0,8,0"
+                                    ToolTip="在半径范围内扫描某种结构，列表里双击定位" Click="FinderToggle_Click"/>
+                            <Button Content="移动到中心" Style="{StaticResource BaseButton}" Padding="13,4" Margin="0,0,8,0"
+                                    ToolTip="把视角跳到红点位置" Click="CenterOnDot_Click"/>
+                            <Button Content="复制 TP 指令" Style="{StaticResource Primary}" Padding="15,4" Click="CopyTp_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- 右侧可折叠勾选面板：群系和结构各占一半高度，都能滚 -->
+                <Border DockPanel.Dock="Right" Width="248" Style="{StaticResource CardBox}" Padding="12,10" Margin="10,0,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*" MinHeight="60"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*" MinHeight="60"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,2">
+                            <Button Style="{StaticResource Ghost}" Padding="4,2" HorizontalAlignment="Left" Click="ToggleBiome_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="BiomeArrow" Text="&#xE70D;" Style="{StaticResource Icon}" FontSize="9" Margin="0,0,6,0"/>
+                                    <TextBlock Text="显示的群系" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <Button Content="全选" Style="{StaticResource BaseButton}" Padding="7,1" FontSize="11" Click="BiomeAll_Click"/>
+                                <Button Content="清空" Style="{StaticResource BaseButton}" Padding="7,1" FontSize="11" Margin="5,0,0,0" Click="BiomeNone_Click"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- R4：群系搜索（按中文名或英文 id 实时过滤，只改 Visibility） -->
+                        <TextBox x:Name="BiomeSearch" Grid.Row="1" FontSize="12.5" Margin="0,0,0,4" Padding="10,5"
+                                 Tag="搜群系（中文名 / 英文 id）"
+                                 Foreground="#101828" CaretBrush="#101828" Background="{DynamicResource Card}"
+                                 TextChanged="BiomeSearch_Changed"/>
+
+                        <ScrollViewer x:Name="BiomeBody" Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="2,0,0,4">
+                            <StackPanel x:Name="BiomeList"/>
+                        </ScrollViewer>
+                        <TextBlock x:Name="BiomeHint" Grid.Row="3" Style="{StaticResource Sub}" Margin="2,2,0,6" TextWrapping="Wrap"
+                                   Text="不勾选的群系不渲染。"/>
+
+                        <Border Grid.Row="4" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource Line}" Padding="0,8,0,2">
+                            <Grid>
+                                <Button Style="{StaticResource Ghost}" Padding="4,2" HorizontalAlignment="Left" Click="ToggleStruct_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock x:Name="StructArrow" Text="&#xE70D;" Style="{StaticResource Icon}" FontSize="9" Margin="0,0,6,0"/>
+                                        <TextBlock Text="结构标记" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <Button Content="全选" Style="{StaticResource BaseButton}" Padding="7,1" FontSize="11" Click="StructAll_Click"/>
+                                    <Button Content="清空" Style="{StaticResource BaseButton}" Padding="7,1" FontSize="11" Margin="5,0,0,0" Click="StructNone_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <TextBox x:Name="StructSearch" Grid.Row="5" FontSize="12.5" Margin="0,2,0,4" Padding="10,5"
+                                 Tag="搜结构（中文名 / 英文 id）"
+                                 Foreground="#101828" CaretBrush="#101828" Background="{DynamicResource Card}"
+                                 TextChanged="StructSearch_Changed"/>
+
+                        <ScrollViewer x:Name="StructBody" Grid.Row="6" VerticalScrollBarVisibility="Auto" Margin="2,0,0,4">
+                            <StackPanel x:Name="StructList"/>
+                        </ScrollViewer>
+                        <TextBlock x:Name="StructHint" Grid.Row="7" Style="{StaticResource Sub}" Margin="2,4,0,0"
+                                   TextWrapping="Wrap" Text="只画当前维度里存在的结构。"/>
+                    </Grid>
+                </Border>
+
+                <!-- 地图：画布 = 这块区域的可用尺寸（R1），100% 正好填满、没有滚动条 -->
+                <Border Style="{StaticResource CardBox}" Padding="6" Margin="0">
+                    <Grid x:Name="MapHost" Background="#FAFBFD" ClipToBounds="True"
+                          SizeChanged="MapHost_SizeChanged"
+                          PreviewMouseWheel="MapHost_PreviewWheel"
+                          MouseLeftButtonDown="MapHost_MouseDown"
+                          MouseMove="MapHost_MouseMove"
+                          MouseLeftButtonUp="MapHost_MouseUp"
+                          MouseLeave="MapHost_Leave">
+                        <!-- 内容层：平移 / 缩放时整体做变换，不重画位图 → 拖动不掉帧 -->
+                        <Grid x:Name="MapContent" RenderTransformOrigin="0,0">
+                            <Grid.RenderTransform>
+                                <TranslateTransform x:Name="MapShift"/>
+                            </Grid.RenderTransform>
+                            <Image x:Name="SeedMap" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                            <!-- 覆盖层：结构标记 / 结构小框 / 玩家点，坐标都是"屏幕 DIP" -->
+                            <Canvas x:Name="MapOverlay">
+                                <Canvas x:Name="StructLayer"/>
+                                <Border x:Name="StructInfo" Visibility="Collapsed" Canvas.Left="0" Canvas.Top="0"
+                                        Background="{DynamicResource Card}" BorderBrush="{DynamicResource Line}"
+                                        BorderThickness="1" CornerRadius="10" Padding="11,8"
+                                        MouseEnter="StructInfo_Enter" MouseLeave="StructInfo_Leave">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="16" ShadowDepth="2" Direction="270" Opacity="0.16" Color="#101828"/>
+                                    </Border.Effect>
+                                    <StackPanel>
+                                        <!-- R5：这块是拖动把手（按钮不在里面，点按钮不会被拖动吃掉） -->
+                                        <Grid x:Name="StructInfoDrag" Cursor="SizeAll" Background="Transparent"
+                                              ToolTip="按住这里可以拖动小框">
+                                            <StackPanel>
+                                                <TextBlock x:Name="StructInfoTitle" Text="村庄" FontWeight="SemiBold" FontSize="13"/>
+                                                <TextBlock x:Name="StructInfoCoord" Text="0, 0" Style="{StaticResource Sub}" Margin="0,2,0,7"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="复制 /tp" Style="{StaticResource Primary}" Padding="11,3" FontSize="12" Click="CopyStructTp_Click"/>
+                                            <Button Content="关闭" Style="{StaticResource BaseButton}" Padding="11,3" FontSize="12" Margin="6,0,0,0" Click="CloseStructInfo_Click"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Canvas>
+                        </Grid>
+                        <!-- 补算中的浅色提示（压在内容层上面，不挡鼠标） -->
+                        <Border x:Name="MapBusy" Visibility="Collapsed" IsHitTestVisible="False"
+                                HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0"
+                                Background="#CCFFFFFF" BorderBrush="{DynamicResource Line}" BorderThickness="1"
+                                CornerRadius="12" Padding="12,5">
+                            <TextBlock Text="补算中…" Style="{StaticResource Sub}"/>
+                        </Border>
+
+                        <!-- R2：结构查找（半径内批量扫描 → 列表 → 双击定位） -->
+                        <Border x:Name="FinderPanel" Visibility="Collapsed"
+                                HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"
+                                Width="322" Background="{DynamicResource Card}" BorderBrush="{DynamicResource Line}"
+                                BorderThickness="1" CornerRadius="14" Padding="14,12">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="20" ShadowDepth="3" Direction="270" Opacity="0.18" Color="#101828"/>
+                            </Border.Effect>
+                            <StackPanel>
+                                <Grid Margin="0,0,0,6">
+                                    <TextBlock x:Name="FinderTitle" Text="结构查找" FontSize="14" FontWeight="SemiBold"
+                                               VerticalAlignment="Center" Cursor="SizeAll" ToolTip="按住标题可以拖动这个面板"/>
+                                    <Button Content="&#xE711;" FontFamily="{StaticResource Icons}" Style="{StaticResource Ghost}"
+                                            Padding="7,1" FontSize="11" HorizontalAlignment="Right" Click="FinderToggle_Click" ToolTip="收起"/>
+                                </Grid>
+                                <TextBlock Style="{StaticResource Sub}" TextWrapping="Wrap" Margin="0,0,0,8"
+                                           Text="一次渲染到几千区块外做不到；这里按区域批量扫描候选点，只列出结果，双击就能定位过去。"/>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox x:Name="FinderTypeBox" Grid.Column="0" FontSize="12"/>
+                                    <ComboBox x:Name="FinderRadiusBox" Grid.Column="1" Width="98" Margin="6,0,0,0" FontSize="12"/>
+                                    <Button Content="查找" Grid.Column="2" Style="{StaticResource Primary}" Padding="13,4" Margin="6,0,0,0" Click="FinderGo_Click"/>
+                                </Grid>
+                                <TextBlock x:Name="FinderStatus" Style="{StaticResource Sub}" Margin="0,0,0,6" TextWrapping="Wrap"
+                                           Text="选类型和半径，然后点「查找」"/>
+                                <ListBox x:Name="FinderList" Height="228" Background="Transparent" BorderThickness="0"
+                                         MouseDoubleClick="FinderList_DoubleClick" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Height="24">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Width="9" Height="9" CornerRadius="3" Background="{Binding Color}" VerticalAlignment="Center" Margin="0,0,7,0"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Title}" FontSize="12.5" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding CoordText}" FontSize="11.5" Foreground="{DynamicResource Text3}" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                <TextBlock Style="{StaticResource Sub}" Margin="0,6,0,0" TextWrapping="Wrap"
+                                           Text="双击一行：视角跳过去，并把它设成玩家点。"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -56,6 +56,44 @@ application ("第三方组件与许可") and are also kept under src/LunoLaunche
     Unmodified: this license forbids modifying the DLL
 
 
+Seed map structure icons (copied from cubiomes-viewer)
+------------------------------------------------------
+
+The structure markers on the "种子查询" map and the icons in its structure list are the
+icon set of cubiomes-viewer, copied without modification, plus four icons drawn for this
+project (see the second list below):
+
+  Files    : src/LunoLauncher/Assets/structure-icons/
+             desert, jungle, hut, igloo, village, ruins, shipwreck, monument, mansion,
+             outpost, portal, ancient_city, treasure, mineshaft, well, geode, fortress,
+             bastion, endcity, gateway, trails, chambers, stronghold  (.png)
+  License  : GNU General Public License v3.0 — the same license as LunoLauncher, so the
+             icons are redistributed here under GPL-3.0 as well.
+  Source   : https://github.com/Cubitect/cubiomes-viewer (rc/icons/)
+  Author   : cubiomes-viewer contributors
+
+  Note     : the icons draw in-game Minecraft structures. Those structures, and the
+             artwork they reference, are content of Minecraft; copyright and trademarks
+             belong to Mojang Studios / Microsoft (see "Trademarks and affiliation"
+             below). They are used here only as small map symbols inside a GPL-3.0
+             program, and no Minecraft game assets or code are redistributed.
+
+Original icons drawn for LunoLauncher
+-------------------------------------
+
+cubiomes-viewer has no icon for four of the structure types, so these were drawn for this
+project in the same 20x20 pixel-art style (1px dark outline, flat palette):
+
+  Files    : src/LunoLauncher/Assets/structure-icons/
+             feature.png          (0  Feature, pre-1.13 generation attempts)
+             nether_fossil.png    (20 Nether_Fossil)
+             end_island.png       (23 End_Island)
+             abandoned_camp.png   (26 Abandoned_Camp)
+  Author   : LunoLauncher contributors — no third-party artwork involved
+  License  : GPL-3.0 (same as the rest of this project)
+  Generated: tools/icons/gen-structure-icons.py — run it to regenerate the PNGs
+
+
 Bundled Microsoft application (Client ID)
 -----------------------------------------
 

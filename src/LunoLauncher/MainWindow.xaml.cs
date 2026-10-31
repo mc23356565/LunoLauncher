@@ -26,6 +26,7 @@ namespace LunoLauncher
         public LaunchPage LaunchPage { get; private set; }
         public DownloadPage DownloadPage { get; private set; }
         public CoopPage CoopPage { get; private set; }
+        public ToolboxPage ToolboxPage { get; private set; }
         public SettingsPage SettingsPage { get; private set; }
         public MorePage MorePage { get; private set; }
 
@@ -42,11 +43,13 @@ namespace LunoLauncher
             LaunchPage = new LaunchPage();
             DownloadPage = new DownloadPage();
             CoopPage = new CoopPage();
+            ToolboxPage = new ToolboxPage();
             SettingsPage = new SettingsPage();
             MorePage = new MorePage();
             _stacks[NavLaunch] = new Stack<FrameworkElement>(new FrameworkElement[] { LaunchPage });
             _stacks[NavDownload] = new Stack<FrameworkElement>(new FrameworkElement[] { DownloadPage });
             _stacks[NavCoop] = new Stack<FrameworkElement>(new FrameworkElement[] { CoopPage });
+            _stacks[NavToolbox] = new Stack<FrameworkElement>(new FrameworkElement[] { ToolboxPage });
             _stacks[NavSettings] = new Stack<FrameworkElement>(new FrameworkElement[] { SettingsPage });
             _stacks[NavMore] = new Stack<FrameworkElement>(new FrameworkElement[] { MorePage });
 
@@ -101,7 +104,7 @@ namespace LunoLauncher
 
         public void GoTab(string name, FrameworkElement sub = null)
         {
-            var rb = name switch { "download" => NavDownload, "coop" => NavCoop, "settings" => NavSettings, "more" => NavMore, _ => NavLaunch };
+            var rb = name switch { "download" => NavDownload, "coop" => NavCoop, "toolbox" => NavToolbox, "settings" => NavSettings, "more" => NavMore, _ => NavLaunch };
             var st = _stacks[rb];
             while (st.Count > 1) st.Pop();
             if (rb.IsChecked == true) Show(st.Peek()); else rb.IsChecked = true;
@@ -118,6 +121,8 @@ namespace LunoLauncher
             {
                 case "download": GoTab("download"); break;
                 case "coop": GoTab("coop"); break;
+                case "toolbox": GoTab("toolbox"); break;
+                case "seed": GoTab("toolbox"); ToolboxPage.ShowSeed(args, i + 2); break;
                 case "settings": GoTab("settings"); break;
                 case "more": GoTab("more"); break;
                 case "versions": Push(new VersionsPage()); break;
